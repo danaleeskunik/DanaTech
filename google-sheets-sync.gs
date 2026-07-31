@@ -50,6 +50,7 @@ function readSheet(name) {
           try { v = JSON.parse(v); } catch (err) { v = []; }
         }
         if (h === 'paid') v = (v === true || v === 'TRUE' || v === 'true');
+        if (h === 'phone' && v !== '') v = String(v);
         obj[h] = v;
       });
       return obj;
@@ -67,6 +68,10 @@ function writeSheet(name, list) {
     if (h === 'slots') v = JSON.stringify(v || []);
     return (v === undefined || v === null) ? '' : v;
   }));
+  const phoneCol = headers.indexOf('phone');
+  if (phoneCol !== -1) {
+    sh.getRange(2, phoneCol + 1, rows.length, 1).setNumberFormat('@');
+  }
   sh.getRange(2, 1, rows.length, headers.length).setValues(rows);
 }
 
