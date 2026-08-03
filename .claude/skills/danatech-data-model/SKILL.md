@@ -63,7 +63,17 @@ Lives in `index.html`'s app state (tab "תלמידים"), form defined around
 | `day`, `time` | number/string | denormalized copy of `slots[0]`, kept for legacy/simple lookups — always derived, never edit directly without also updating `slots` |
 | `price` | number | ₪ per lesson, this student's rate (can differ per student) |
 | `status` | enum | `'פעיל' \| 'הפסקה' \| 'סיים'` (active / paused / finished) |
+| `contactName` | string | secondary contact (usually an adult child), added 2026-08-03 |
+| `contactPhone` | string | phone for the secondary contact — also forced **text** in the Sheet (same reason as `phone`) |
+| `referral` | enum | `'המלצה מלקוחה' \| 'משפחה/חברים' \| 'פייסבוק' \| 'פלייר' \| 'אחר'` — how this student found Dana |
+| `birthday` | string | `YYYY-MM-DD`, forced **text** in the Sheet (same reason as `phone` — a bare date cell gets Sheets-auto-converted) |
+| `currentLesson` | number | last lesson number covered from that student's level's curriculum (teaching-toolkit.html numbering) — purely a manual tracker, no structural link to the lesson-plan data itself |
 | `notes` | string | freeform, e.g. accessibility notes like "קשה לה לראות טקסט קטן" |
+
+The "כרטיס לקוחה" (client card) — a read-only modal opened via an info-icon
+button on each student row in `index.html` — aggregates all of the above
+plus lesson count (from `notes`) and total paid (from `payments`) into one
+view. It's presentation only; it doesn't add new stored fields.
 
 ### 2. Payments (`payments` — תשלומים)
 
@@ -120,6 +130,56 @@ lesson:
 ```
 { n: 7, title: '...', sub: 'לאחר שיעור 6', tip: '...', tasks: ['...', '...'] }
 ```
+
+## Reports tab (דוחות) — index.html
+
+Added 2026-08-03. Aggregates `payments` by year (not a new stored entity):
+year, income (sum of `total` where `paid`), lessons paid, and open due —
+for annual tax-reporting purposes. Sits between "תשלומים" and "לוז" in the
+tabs array.
+
+## WhatsApp reminders — three independent instances, same pattern
+
+All build a `https://wa.me/<972-phone>?text=<encoded message>` link from a
+student's `phone` (never auto-sends — WhatsApp has no API for that from a
+plain link, the click just opens a pre-filled chat):
+1. **Lesson reminder** — home tab "השיעורים השבוע" and the תזכורות tab.
+2. **Payment reminder** — new 2026-08-03, on unpaid rows in the תשלומים tab
+   (`payGroups[].rows[].waHref`, gated on `!paid && phone`).
+3. **Birthday reminder** — new 2026-08-03, home tab "ימי הולדת החודש"
+   section, filters `students` by `birthday`'s month, tracks sent-state via
+   the same `sentRem`/`markSent` mechanism as lesson reminders (keyed
+   `'bday-' + id + '|' + year` so it naturally resets next year).
+
+`flier.html` also got a manual-send panel (2026-08-03): a phone input +
+send button, same wa.me pattern, but the message is generic ("מצרפת לך את
+הפלייר שלי...") since **a link can't attach the image** — Dana still
+attaches `flier.png` by hand in WhatsApp after the chat opens.
+
+## Home navigation — home-fab
+
+2026-08-03: the old in-header "בית" text-pill (in `index.html` and
+`teaching-toolkit.html`) and the old floating icon+text `.home-pill` (in
+`practice-sheets.html`/`flier.html`) were unified into one consistent
+control: a fixed, icon-only, 52px circle top-left (`top:14px;left:14px`),
+same on all four bundled pages, `href="home.html"`. Class name differs
+per-file for historical reasons (`.home-fab` in index/teaching-toolkit,
+`.home-pill` in practice-sheets/flier) but the CSS is identical — if
+touching one, touch all four for consistency.
+
+**Gotcha**: the fixed element must be positioned via `left`, never `right`
+— `doc-page` (used in practice-sheets/flier/teaching-toolkit) establishes
+its own containing block, so `right:14px` resolves against the print
+layout's fixed width (~842px) rather than the actual viewport, pushing the
+element off-screen on any viewport narrower than that (this bit the
+flier.html send-panel on mobile before it was switched to `left:80px`).
+
+Inside `index.html` there are now two different "home" concepts — don't
+conflate them: the **הבית‑fab button** (top-left, navigates away to
+`home.html`) vs. the **"ראשי" tab** (first tab in the in-app tab bar, an
+internal dashboard view, tab id still `'home'` in code even though the
+label was renamed from "בית" to "ראשי" on 2026-08-03 to stop the two from
+reading as the same thing).
 
 ## Cross-entity notes
 
