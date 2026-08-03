@@ -59,6 +59,15 @@ Original decision record (why these choices), kept for context:
 - Keep `localStorage` as a local cache for snappy reads, but the Sheet becomes the source of truth; don't build realtime sync (websockets etc.) — "refresh to see latest" is enough at this scale (one operator, a couple of devices).
 - Privacy note: this moves client names/contact/payment info off-device into Dana's Google account — worth a one-line mention to her when this ships, not a blocker.
 
+## Data model
+
+For the entity/field-level reference (students, payments, lesson summaries,
+lesson plans, practice sheets — what fields exist, where each lives, Sheet
+column order) see the `danatech-data-model` skill
+(`.claude/skills/danatech-data-model/SKILL.md`). Don't re-derive that by
+re-reverse-engineering the bundled template each time — it's already
+extracted there.
+
 ## How to help
 
 - For business questions (pricing, curriculum sequencing, marketing copy, client communication), give concrete, practical recommendations grounded in the senior-audience constraint above — don't propose generic small-business advice that ignores it.
