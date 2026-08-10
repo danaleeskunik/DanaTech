@@ -6,7 +6,7 @@ const SHEETS = {
   students: ['id', 'name', 'phone', 'city', 'level', 'slots', 'day', 'time', 'price', 'status', 'contactName', 'contactPhone', 'referral', 'birthday', 'currentLesson', 'notes'],
   payments: ['id', 'studentId', 'month', 'lessons', 'price', 'total', 'paid', 'date'],
   notes: ['id', 'studentId', 'date', 'summary', 'homework', 'mood'],
-  contacts: ['id', 'name', 'phone', 'lastContact', 'agreed', 'referredBy', 'notes']
+  contacts: ['id', 'name', 'phone', 'lastContact', 'referredBy', 'notes']
 };
 
 const TAB_NAMES = { students: 'תלמידות', payments: 'תשלומים', notes: 'סיכומי שיעור', contacts: 'אנשי קשר' };

@@ -127,7 +127,7 @@ narrow viewports with the same edge-fade mask used elsewhere.
 | `phone` | string | forced **text** in the Sheet (same reason as student.phone) |
 | `lastContact` | string | `YYYY-MM-DD`, "מתי דיברתי" — last conversation date, manually updated; not a log of every call, just the most recent one. Forced **text** in the Sheet. |
 | `referredBy` | string | "מי הפנה" — free text (a name), not an enum like student.referral, and not a FK — the referrer may or may not be an existing student |
-| `notes` | string | freeform — merged with what used to be a separate `agreed` ("מה סוכם") field, removed 2026-08-10 as redundant with `notes`. The Sheet's "מה סוכם" column is now permanently blank going forward (harmless leftover, not written to) — Dana can delete it herself in Sheets, no `.gs` redeploy needed since it's a whole-list JSON overwrite, not positional. |
+| `notes` | string | freeform — merged with what used to be a separate `agreed` ("מה סוכם") field, removed 2026-08-10 as redundant with `notes`. Also dropped from `SHEETS.contacts` in [google-sheets-sync.gs](../../google-sheets-sync.gs); `writeSheet()` does a full `clearContents()` + header rewrite on every push (not positional), so once Dana redeploys and saves any contact, the "מה סוכם" column disappears from the Sheet on its own. |
 
 Has its own WhatsApp shortcut (`hasWa`/`waHref` on each row) with a generic
 opener message ("היי {name}! זו דנה מ'טק בגובה העיניים' :)") since, unlike
