@@ -1,14 +1,14 @@
 ---
 name: danatech-data-model
 description: >
-  Entity/data-model reference for DanaTech (Tech lessons/final) — the five
+  Entity/data-model reference for DanaTech (Tech lessons/final) — the six
   core entities: students/clients, schedule, payments, lesson summaries
-  (סיכומי שיעור), and lesson plans (מערכי שיעור). Load this for any task that
-  touches these entities — adding/editing a field, changing a form, wiring a
-  new report, or a business question about pricing/curriculum/scheduling
-  that needs to know what data actually exists and where. This is a data
-  reference only. For file-editing mechanics (how to actually change the
-  bundled HTML) and business judgment, also load
+  (סיכומי שיעור), lesson plans (מערכי שיעור), and contacts/leads (אנשי קשר).
+  Load this for any task that touches these entities — adding/editing a
+  field, changing a form, wiring a new report, or a business question about
+  pricing/curriculum/scheduling that needs to know what data actually exists
+  and where. This is a data reference only. For file-editing mechanics (how
+  to actually change the bundled HTML) and business judgment, also load
   `.claude/agents/danatech-advisor.md` — don't duplicate its content here.
 ---
 
@@ -30,9 +30,12 @@ stack" template; don't re-run framework detection, there is no framework)
 - **Backend**: none in the traditional sense — a single Google Apps Script
   Web App ([google-sheets-sync.gs](../../google-sheets-sync.gs)), exposing
   `doGet`/`doPost` as a tiny REST layer over a Google Sheet.
-- **Database**: the Google Sheet itself, three tabs — תלמידות (students),
-  תשלומים (payments), סיכומי שיעור (notes). `localStorage` on whichever
-  device Dana used is a local cache/mirror, not the source of truth.
+- **Database**: the Google Sheet itself, four tabs — תלמידות (students),
+  תשלומים (payments), סיכומי שיעור (notes), אנשי קשר (contacts, added
+  2026-08-10). `localStorage` on whichever device Dana used is a local
+  cache/mirror, not the source of truth. Two more structures live in
+  `localStorage` **only** and never sync to the Sheet — see "Local-only
+  auxiliary state" below; don't assume everything persisted is in the Sheet.
 - **Hosting**: none. Distributed as a ZIP Dana extracts and opens locally in
   Chrome (see README.txt) — GitHub (`danaleeskunik/DanaTech`, public,
   `main`) is source control only, not a deploy target.
@@ -41,11 +44,14 @@ stack" template; don't re-run framework detection, there is no framework)
   manually entered paid/unpaid tracking, not a billing system.
 - Language: Hebrew/RTL throughout, no i18n layer.
 
-## The five entities
+## The six entities
 
 Schedule is **not** a separate stored entity — it's derived from each
 student's `slots`. Don't go looking for a standalone "schedule" data
-structure; there isn't one.
+structure; there isn't one. (There is, separately, a `scheduleExceptions`
+structure for one-time date overrides — see "Local-only auxiliary state"
+below. It's not a core entity: it only ever references a student + a date,
+never carries its own business data.)
 
 ### 1. Student / client (`students` — תלמידות)
 
@@ -104,7 +110,31 @@ Tab "סיכומי שיעור" in `index.html`. One record per lesson actually gi
 | `homework` | string | "שיעורי בית" — what to practice before next lesson |
 | `mood` | enum | `'good' \| 'ok' \| 'hard'` → label + colors via `MOOD` map (`good`='השיעור הלך טוב'/green, `ok`='בסדר, היו קשיים'/amber, `hard`='שיעור קשה'/red) |
 
-### 4. Lesson plans (מערכי שיעור) — `teaching-toolkit.html`
+### 4. Contacts / leads (`contacts` — אנשי קשר)
+
+Added 2026-08-10. Tab "אנשי קשר" in `index.html`, sits between "תלמידים" and
+"תשלומים" in the tabs array. Tracks leads/inquiries *before* they become a
+student — deliberately **not** linked to the `students` table (no FK either
+direction; if a contact converts, Dana just creates a separate student
+record by hand, same as she always did). Rendered as a table (not cards, to
+fit multiple free-text columns at a glance), horizontally scrollable on
+narrow viewports with the same edge-fade mask used elsewhere.
+
+| field | type | notes |
+|---|---|---|
+| `id` | string | |
+| `name` | string | full name |
+| `phone` | string | forced **text** in the Sheet (same reason as student.phone) |
+| `lastContact` | string | `YYYY-MM-DD`, "מתי דיברתי" — last conversation date, manually updated; not a log of every call, just the most recent one. Forced **text** in the Sheet. |
+| `agreed` | string | "מה סוכם" — free text, e.g. next follow-up plan |
+| `referredBy` | string | "מי הפנה" — free text (a name), not an enum like student.referral, and not a FK — the referrer may or may not be an existing student |
+| `notes` | string | freeform |
+
+Has its own WhatsApp shortcut (`hasWa`/`waHref` on each row) with a generic
+opener message ("היי {name}! זו דנה מ'טק בגובה העיניים' :)") since, unlike
+lesson/payment reminders, there's no fixed fact (time, amount) to reference.
+
+### 5. Lesson plans (מערכי שיעור) — `teaching-toolkit.html`
 
 Not in the Sheet — static curriculum content, hand-maintained in the
 bundled template. Grouped by level (1/2/3 = מתחיל/בינוני/מתקדם, matching
@@ -119,7 +149,7 @@ student.level). One plan object per lesson:
 `badge` can span lessons (`'שיעורים 3–4'`) when one plan covers two
 sessions. `sections[].kind` drives the visual styling per section type.
 
-### 5. Practice sheets — `practice-sheets.html`
+### 6. Practice sheets — `practice-sheets.html`
 
 A **separate, independently-maintained mirror** of the same curriculum,
 formatted for printing (client-facing, `Ctrl/Cmd+P`). Not derived from the
@@ -130,6 +160,46 @@ lesson:
 ```
 { n: 7, title: '...', sub: 'לאחר שיעור 6', tip: '...', tasks: ['...', '...'] }
 ```
+
+## Local-only auxiliary state (never synced to the Sheet)
+
+Two structures follow the precedent set by `sentRem` (reminder-sent
+tracking, pre-existing): loaded once in `componentDidMount` straight from
+`localStorage`, saved via a direct `localStorage.setItem` call, and never
+touch `persist()`/`pushToSheet()`. Deliberately local-only per device —
+adding Sheet sync would mean a new Sheet tab, `.gs` changes, and another
+redeploy for Dana, which isn't worth it for state this ephemeral/auxiliary.
+
+- **`tk_sent_reminders`** (`sentRem` in state) — which WhatsApp reminders
+  have already been sent, keyed by id+date so it naturally resets.
+- **`tk_schedule_exceptions`** (`scheduleExceptions` in state, added
+  2026-08-10) — one-time overrides to a student's recurring schedule, for
+  "move this Sunday's lesson to Monday" or "cancel just this week's lesson"
+  without touching the student's actual recurring `slots`. Each entry:
+  `{ id, studentId, date, type: 'moved' | 'cancelled', newDate?, newTime? }`
+  where `date` is the **original** occurrence's date (`YYYY-MM-DD`) — always
+  the lookup key, even after a moved lesson gets moved again (the exception
+  is updated in place, never duplicated). `newDate`/`newTime` only apply
+  when `type === 'moved'`.
+  - Consumed in two places, both in `index.html`'s render: the home tab's
+    "השיעורים השבוע" list (now genuinely date-based — the next 7 calendar
+    days, not just weekday labels — so a change can actually attach to one
+    specific occurrence) and the "לוז" tab, which itself changed from an
+    abstract weekly template to a real-dated grid of the current calendar
+    week, fixed rows 08:00–18:00 (lessons bucket into the row matching their
+    hour; a lesson at :30 still displays its exact time inside the cell).
+  - A **moved** lesson's original slot is not shown at all (no "moved from"
+    ghost row) — only the relocated occurrence appears, tagged "הועבר מ-X",
+    with the same move/cancel-once icons as any normal occurrence (moving or
+    cancelling it again just updates/replaces the same exception). A
+    **cancelled** lesson still shows at its original slot, struck through,
+    tagged "בוטל לשיעור זה" — there's no undo control for either case by
+    design (Dana's call — re-move or re-add manually instead).
+  - The לוז grid additionally supports **drag-and-drop** (desktop only) to
+    create the same 'moved' exception by dragging a lesson chip to another
+    cell — same data, just a second way to write it. Dragging a chip back
+    onto its own original cell deletes the exception instead of writing a
+    same→same one.
 
 ## Reports tab (דוחות) — index.html
 
@@ -195,7 +265,7 @@ reading as the same thing).
 The template this was based on suggested separate `payments-flow`,
 `scheduling-rules`, `client-management`, `lesson-content` skills. That's
 over-engineered for a solo-operator toolkit this size — schedule isn't even
-a distinct entity, and the entities are small enough (5, all listed above)
+a distinct entity, and the entities are small enough (6, all listed above)
 to stay in one file. Don't split this up unless the project genuinely grows
 data model complexity that no longer fits one page.
 

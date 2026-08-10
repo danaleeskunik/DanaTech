@@ -5,16 +5,17 @@
 const SHEETS = {
   students: ['id', 'name', 'phone', 'city', 'level', 'slots', 'day', 'time', 'price', 'status', 'contactName', 'contactPhone', 'referral', 'birthday', 'currentLesson', 'notes'],
   payments: ['id', 'studentId', 'month', 'lessons', 'price', 'total', 'paid', 'date'],
-  notes: ['id', 'studentId', 'date', 'summary', 'homework', 'mood']
+  notes: ['id', 'studentId', 'date', 'summary', 'homework', 'mood'],
+  contacts: ['id', 'name', 'phone', 'lastContact', 'agreed', 'referredBy', 'notes']
 };
 
-const TAB_NAMES = { students: 'תלמידות', payments: 'תשלומים', notes: 'סיכומי שיעור' };
+const TAB_NAMES = { students: 'תלמידות', payments: 'תשלומים', notes: 'סיכומי שיעור', contacts: 'אנשי קשר' };
 
 // Columns forced to plain text — Sheets auto-converts bare digit/date-looking
 // strings (phone numbers, YYYY-MM-DD) to numbers/dates, which drops leading
 // zeros and breaks the app's string parsing. Same fix as the original phone
 // crash (2026-07-31), applied to every column with the same shape.
-const TEXT_COLS = ['phone', 'contactPhone', 'birthday'];
+const TEXT_COLS = ['phone', 'contactPhone', 'birthday', 'lastContact'];
 
 function doGet(e) {
   const out = {};
