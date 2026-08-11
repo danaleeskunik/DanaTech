@@ -23,7 +23,8 @@
   --green-500: #00A563;  /* success */
   --green-100: #EAF7F1;  /* pale green surface */
   --whatsapp: #25D366;
-  --whatsapp-ink: #0A2E17;
+  --whatsapp-icon: #FFFFFF;  /* icon/text on whatsapp green — changed 2026-08-11, Dana's explicit call */
+  --whatsapp-ink: #0A2E17;   /* superseded 2026-08-11 by whatsapp-icon, kept for history — no longer used anywhere in the live app */
 
   /* ---- Orange: tips, warnings, level 3 ---- */
   --orange-700: #8A4A11; /* tip body copy */

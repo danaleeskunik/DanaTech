@@ -125,7 +125,7 @@ function Flier() {
             <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: '1.4px', color: 'var(--blue-300)' }}>שיעורים בבית הלקוח/ת</div>
             <div dir="ltr" style={{ fontFamily: 'var(--font-num)', fontSize: 42, fontWeight: 900, letterSpacing: '-1.4px', marginTop: 2, color: '#fff' }}>053-700-4934</div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '17px 24px', borderRadius: 'var(--radius-pill)', background: 'var(--whatsapp)', color: 'var(--whatsapp-ink)', fontSize: 20, fontWeight: 800 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '17px 24px', borderRadius: 'var(--radius-pill)', background: 'var(--whatsapp)', color: 'var(--whatsapp-icon)', fontSize: 20, fontWeight: 800 }}>
             <Icon name="whatsapp" size={25} />כתבו לי
           </div>
         </div>

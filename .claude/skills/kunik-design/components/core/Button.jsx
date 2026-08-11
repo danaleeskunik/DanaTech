@@ -23,7 +23,7 @@ export function Button({
     primary: { background: accent, color: '#fff', fontWeight: 'var(--fw-heavy)' },
     secondary: { background: 'var(--surface-card)', color: 'var(--navy-800)', border: '2px solid var(--border-field)', fontWeight: 'var(--fw-bold)' },
     quiet: { background: 'var(--surface-muted)', color: 'var(--ink-5)', fontWeight: 'var(--fw-bold)' },
-    whatsapp: { background: 'var(--whatsapp)', color: 'var(--whatsapp-ink)', fontWeight: 'var(--fw-heavy)' },
+    whatsapp: { background: 'var(--whatsapp)', color: 'var(--whatsapp-icon)', fontWeight: 'var(--fw-heavy)' },
     onNavy: { background: 'var(--on-navy-fill)', color: '#fff', border: '1px solid var(--on-navy-border)', fontWeight: 'var(--fw-bold)' },
   }[variant] || {};
 
