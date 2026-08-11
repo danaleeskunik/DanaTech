@@ -1,7 +1,7 @@
 ---
 name: danatech-data-model
 description: >
-  Entity/data-model reference for DanaTech (Tech lessons/final) — the six
+  Entity/data-model reference for DanaTech (~/Claude/DanaTech) — the six
   core entities: students/clients, schedule, payments, lesson summaries
   (סיכומי שיעור), lesson plans (מערכי שיעור), and contacts/leads (אנשי קשר).
   Load this for any task that touches these entities — adding/editing a
