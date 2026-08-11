@@ -1,0 +1,54 @@
+<!-- @dsCard group="Components" viewport="700x340" name="Core" subtitle="Buttons, cards, badges, callouts, stats" -->
+<!DOCTYPE html><html lang="he" dir="rtl"><head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{margin:0;padding:18px 20px;background:var(--surface-canvas);font-family:var(--font-ui);color:var(--ink-1);direction:rtl}.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.col{display:flex;flex-direction:column;gap:12px}.cap{font-size:11px;font-weight:700;color:var(--ink-7);letter-spacing:.4px}a{color:var(--link)}a:hover{color:var(--link-hover)}</style>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const { Button, IconButton, Card, Badge, Callout, SectionLabel, StatCard, LevelPill, Icon, Logo, TextField, SelectField, Checkbox, AppHeader, SidebarNav, HomeFab, ListRow, DateChip, DataTable, DomainCard, SyncStatus, EmptyState } = window.KunikDesignSystem_63ae72;
+
+function Demo(){return <div className="col">
+<div className="row">
+<Button icon="plus">הוספת רשומה</Button>
+<Button variant="whatsapp" icon="whatsapp">תזכורת</Button>
+<Button variant="secondary" size="sm" icon="chevron-right">חזרה</Button>
+<Button variant="quiet" size="sm">ביטול</Button>
+<Button color="var(--domain-payments)" size="sm" icon="plus">תשלום</Button>
+<Button disabled size="sm">מושבת</Button>
+</div>
+<div className="row">
+<IconButton icon="edit" size="sm" tone="sunken" title="עריכה" />
+<IconButton icon="trash" size="sm" tone="danger" title="מחיקה" />
+<IconButton icon="message" size="sm" tone="success" title="הודעה" />
+<IconButton icon="calendar" title="שינוי מועד" />
+<IconButton icon="close" tone="danger" title="ביטול" />
+<IconButton icon="home" size="lg" tone="navy" title="בית" />
+<span style={{width:14}} />
+<Badge tone="red">דחוף — 4 ימים</Badge>
+<Badge tone="orange">בקרוב</Badge>
+<Badge tone="green" size="sm">שולם</Badge>
+<Badge tone="blue" size="sm">שיעור 4</Badge>
+<Badge tone="neutral" size="sm">לא פעיל</Badge>
+</div>
+<div className="row" style={{alignItems:'stretch'}}>
+<StatCard style={{flex:1}} label="תלמידות פעילות" value="14" sub="מתוך 19" />
+<StatCard style={{flex:1}} label="הכנסות החודש" value="₪3,450" sub="7 שיעורים" color="var(--green-700)" />
+<Card size="lg" interactive style={{flex:1.4,gap:8}}>
+<h3 style={{margin:0,font:'var(--type-card-title)'}}>ערכת ההוראה</h3>
+<p style={{margin:0,font:'var(--type-meta)',color:'var(--ink-6)'}}>מערכי שיעור לשלוש רמות</p>
+</Card>
+</div>
+<div className="row"><LevelPill label="רמה 1 — סמארטפון" selected /><LevelPill label="רמה 2 — מחשב" color="var(--green-500)" /><LevelPill label="רמה 3 — AI" color="var(--orange-500)" /></div>
+<SectionLabel accent="var(--blue-500)">השיעורים השבוע</SectionLabel>
+<div className="row" style={{alignItems:'stretch'}}>
+<Callout tone="tip" style={{flex:1}}>כיבוי והדלקה פותרים כ-80% מהתקלות.</Callout>
+<Callout tone="warn" style={{flex:1}}>שום גוף רשמי לא יבקש קוד SMS.</Callout>
+</div>
+</div>}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Demo />);
+</script></body></html>

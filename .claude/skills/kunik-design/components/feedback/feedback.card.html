@@ -1,0 +1,25 @@
+<!-- @dsCard group="Components" viewport="700x200" name="Feedback" subtitle="Sync status states and empty states" -->
+<!DOCTYPE html><html lang="he" dir="rtl"><head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{margin:0;padding:18px 20px;background:var(--surface-canvas);font-family:var(--font-ui);color:var(--ink-1);direction:rtl}.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.col{display:flex;flex-direction:column;gap:12px}.cap{font-size:11px;font-weight:700;color:var(--ink-7);letter-spacing:.4px}a{color:var(--link)}a:hover{color:var(--link-hover)}</style>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const { Button, IconButton, Card, Badge, Callout, SectionLabel, StatCard, LevelPill, Icon, Logo, TextField, SelectField, Checkbox, AppHeader, SidebarNav, HomeFab, ListRow, DateChip, DataTable, DomainCard, SyncStatus, EmptyState } = window.KunikDesignSystem_63ae72;
+
+function Demo(){return <div className="col">
+<div className="row" style={{background:'var(--navy-800)',padding:12,borderRadius:'var(--radius-12)'}}>
+<SyncStatus state="idle" /><SyncStatus state="syncing" /><SyncStatus state="synced" label="גובה לפני 3 דקות" sub="Google Sheets" /><SyncStatus state="error" />
+</div>
+<div className="row" style={{alignItems:'stretch',gap:12}}>
+<EmptyState style={{flex:1}}>אין שיעורים קבועים. הוסיפי יום ושעה לתלמיד/ה בכרטיס שלה.</EmptyState>
+<EmptyState variant="solid" style={{flex:1}}>אין תאריכים קרובים כרגע.</EmptyState>
+</div>
+</div>}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Demo />);
+</script></body></html>

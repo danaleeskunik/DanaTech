@@ -1,0 +1,26 @@
+<!-- @dsCard group="Tech at Eye Level" viewport="1280x820" name="טק בגובה העיניים" subtitle="Hub, business manager, teaching toolkit, flier & practice sheet" -->
+<!DOCTYPE html><html lang="he" dir="rtl"><head>
+<meta charset="utf-8"><title>טק בגובה העיניים — UI kit</title>
+<link rel="icon" type="image/svg+xml" href="../../assets/logo.svg">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>*{box-sizing:border-box}body{margin:0;background:var(--surface-canvas);color:var(--ink-1);font-family:var(--font-ui);direction:rtl}a{color:var(--link)}a:hover{color:var(--link-hover)}.lift{transition:var(--transition-card)}.lift:hover{transform:var(--hover-lift);box-shadow:var(--shadow-card-hover)}button,input,select,textarea{font-family:inherit}</style>
+</head><body><div id="root"></div>
+<script type="text/babel" src="HomeHub.jsx"></script>
+<script type="text/babel" src="BusinessApp.jsx"></script>
+<script type="text/babel" src="TeachingToolkit.jsx"></script>
+<script type="text/babel" src="PrintDocs.jsx"></script>
+<script type="text/babel">
+function App(){
+  const [screen,setScreen]=React.useState('home');
+  const { HomeFab } = window.KunikDesignSystem_63ae72;
+  if(screen==='home') return <HomeHub go={setScreen} />;
+  if(screen==='business') return <BusinessApp go={setScreen} />;
+  if(screen==='toolkit') return <TeachingToolkit go={setScreen} />;
+  return (<div><div onClick={()=>setScreen('home')}><HomeFab href="#" /></div>{screen==='practice'?<PracticeSheet />:<Flier />}</div>);
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script></body></html>

@@ -1,0 +1,26 @@
+<!-- @dsCard group="Components" viewport="700x230" name="Brand" subtitle="The three-bar mark, lockups and the icon set" -->
+<!DOCTYPE html><html lang="he" dir="rtl"><head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{margin:0;padding:18px 20px;background:var(--surface-canvas);font-family:var(--font-ui);color:var(--ink-1);direction:rtl}.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.col{display:flex;flex-direction:column;gap:12px}.cap{font-size:11px;font-weight:700;color:var(--ink-7);letter-spacing:.4px}a{color:var(--link)}a:hover{color:var(--link-hover)}</style>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const { Button, IconButton, Card, Badge, Callout, SectionLabel, StatCard, LevelPill, Icon, Logo, TextField, SelectField, Checkbox, AppHeader, SidebarNav, HomeFab, ListRow, DateChip, DataTable, DomainCard, SyncStatus, EmptyState } = window.KunikDesignSystem_63ae72;
+
+const NAMES=['home','shield','bars','heart','car','document','bell','trending-up','smartphone','lightbulb','warning','book','toolkit','printer','calendar','flier','slides','sparkles','target','whatsapp','computer','video','image','eye','materials','check','plus','edit','trash','close','chevron-down','export','import','message','arrow-left'];
+function Demo(){return <div className="col">
+<div className="row" style={{gap:26}}>
+<div style={{background:'var(--navy-800)',borderRadius:'var(--radius-14)',padding:'16px 20px'}}><Logo height={30} lockup title="ניהול העסק" subtitle="טק בגובה העיניים · דנה קוניק" /></div>
+<Logo height={30} onNavy={false} lockup title="kunikHome" subtitle="ביטוחים, כספים ובריאות" />
+<Logo height={44} onNavy={false} />
+</div>
+<div className="cap">SET · 24×24 · currentColor · round caps</div>
+<div className="row" style={{gap:16,color:'var(--navy-800)'}}>{NAMES.map(n=><Icon key={n} name={n} size={22} />)}</div>
+</div>}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Demo />);
+</script></body></html>
