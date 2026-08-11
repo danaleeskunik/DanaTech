@@ -14,7 +14,9 @@
   --fw-black: 900; /* @kind font */    /* Heebo numerals only */
 
   /* Scale */
+  --text-10: 10px;    /* found 2026-08-11: tiny badge label */
   --text-11: 11px;
+  --text-11-5: 11.5px; /* found 2026-08-11: pill/chip label */
   --text-12: 12px;
   --text-12-5: 12.5px;
   --text-13: 13px;
@@ -24,9 +26,12 @@
   --text-15: 15px;
   --text-15-5: 15.5px;
   --text-16: 16px;    /* print/practice base — the accessibility floor */
+  --text-16-5: 16.5px; /* found 2026-08-11: confirm-modal body text and buttons */
   --text-17: 17px;
   --text-18: 18px;
   --text-19: 19px;
+  --text-20: 20px;    /* found 2026-08-11: modal title */
+  --text-21: 21px;    /* found 2026-08-11: destructive-confirm modal title */
   --text-22: 22px;
   --text-23: 23px;
   --text-24: 24px;

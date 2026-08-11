@@ -85,4 +85,19 @@
   --success: var(--green-500);
   --warning: var(--orange-500);
   --danger: var(--red-600);
+
+  /* ---- Found in a 2026-08-11 audit of the live tech-eye-level app, missed
+     by the original extraction. Real, consistently-used values — not
+     rounded or invented — just secondary/state colours the first pass
+     didn't sample. ---- */
+  --red-700: #9C0000;          /* destructive-button hover/pressed, pairs with red-600 */
+  --red-100-alt: #FDF0F0;      /* pale red actually used here (delete-icon circle bg, "hard mood" badge, cancelled-lesson badge) — red-100/#FBEAEC is kunikHome's domain-health-bg alias and doesn't appear in this app at all */
+  --ink-10: #C0C5C9;           /* delete-icon default colour, disabled checkbox track, cancelled-lesson badge bg */
+  --blue-chip-border: #C3D9F5; /* border on pale-blue chips/badges, pairs with blue-100 fill */
+  --blue-tab-inactive: #C9DEF7;/* inactive tab label on the navy app header */
+  --blue-level-muted: #3D82D1; /* de-emphasized level/category label text */
+  --green-checked-bg: #F2FAF6; /* checked/active task-toggle background (teaching toolkit) */
+  --green-checked-border: #CFE9DC; /* checked/active task-toggle border */
+  --gold-star: #D4900A;        /* star-rating fill — one-off decorative use, not part of the core semantic palette */
+  --star-empty: #E1E7EE;       /* star-rating empty state */
 }

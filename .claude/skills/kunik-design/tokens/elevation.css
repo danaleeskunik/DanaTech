@@ -19,4 +19,8 @@
   --hero-dots: radial-gradient(rgba(255, 255, 255, .05) 1px, transparent 1px); /* @kind other */
   --hero-dots-size: 22px 22px; /* @kind other */
   --hero-gradient: radial-gradient(120% 130% at 85% 0%, #1B4C88 0%, #0F2E52 60%, #0A2340 100%); /* @kind other */
+
+  /* Found in the 2026-08-11 audit, missed by the original extraction */
+  --shadow-glow-blue: 0 4px 12px rgba(0, 110, 229, .26); /* focus/emphasis glow on a primary action */
+  --shadow-modal: 0 8px 28px rgba(18, 18, 19, .3);       /* confirm/delete modal panel, deeper than shadow-fab */
 }
