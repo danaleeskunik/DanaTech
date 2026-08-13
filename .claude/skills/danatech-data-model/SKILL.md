@@ -203,6 +203,21 @@ redeploy for Dana, which isn't worth it for state this ephemeral/auxiliary.
     לוז grid chip), with the same move/cancel icons — "cancel" on an extra
     deletes the exception outright (there's no recurring pattern underneath
     to fall back to, unlike cancelling a real recurring occurrence).
+  - **Cancelling** (both the home list's icon and the לוז grid's × — see
+    below) goes through the shared `delRecord` confirm-modal pattern (added
+    2026-08-13, replacing the old double-click `confirmDelete` toggle for
+    this specific action — student/payment/note/contact/extraLesson deletes
+    already used it). Two kinds: `cancelOccurrence` (no exception existed
+    yet — creates a fresh `'cancelled'` one) and `cancelMoved` (an existing
+    `'moved'` exception gets replaced by a `'cancelled'` one, keyed on the
+    same original `date`). Both delete the matching Calendar event/instance
+    — see "Calendar sync" below; this used to be a known gap, now closed.
+  - **The × on a לוז grid chip** (added 2026-08-13) is the same cancel
+    action, available directly on the grid instead of only from the home
+    list's "השיעורים השבוע" — useful since a lesson can now be scheduled
+    weeks out (via week navigation) where the home list, capped to the next
+    7 days, wouldn't show it at all. Gated by `item.canCancel` (false only
+    for already-cancelled, muted chips — nothing left to cancel there).
   - The לוז grid additionally supports **drag-and-drop** (desktop only) to
     reschedule: dragging a regular recurring chip creates/updates a
     `'moved'` exception; dragging an `'extra'` chip updates its own
@@ -243,15 +258,20 @@ and the לוז grid's `onDropCell`:
   again. Dragging back onto the exact original slot restores it as a
   one-off single event (not a new series — recreating the series would
   start a second, duplicate recurrence).
+- **Cancel** (home list icon or the לוז grid's ×, `delRecord.kind` of
+  `cancelOccurrence`/`cancelMoved`/`extraLesson` — see the schedule-
+  exceptions section above) → `cancelInstance` for a never-touched
+  recurring occurrence, or a plain `single`/`delete` for one that already
+  had its own Calendar event (a prior move, or an extra lesson). Added
+  2026-08-13; before that, cancelling silently left the Calendar event
+  behind — closed as a direct follow-up request, not an oversight caught
+  later.
 
 All calendar calls are fire-and-forget from the UI's perspective (local
 state saves immediately; the Calendar round-trip patches `calId` back in
 once it resolves) and fail silently if `sheetUrl` isn't configured or the
 request errors — a missing calendar sync never blocks saving the lesson
-itself. **Known gap**: cancelling a single recurring occurrence
-(`type:'cancelled'`, the "ביטול חד־פעמי" action) does *not* remove the
-Calendar event — out of scope per Dana's explicit choice when this was
-built, not an oversight.
+itself.
 
 ## Reports tab (דוחות) — index.html
 
