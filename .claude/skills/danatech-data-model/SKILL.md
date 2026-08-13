@@ -65,7 +65,7 @@ Lives in `index.html`'s app state (tab "תלמידים"), form defined around
 | `phone` | string | kept as **text** in the Sheet deliberately — a numeric phone cell was the root cause of a crash fixed 2026-07-31 (leading-0 loss + `intakeIdFor` crash); never "fix" this back to a number type |
 | `city` | string | |
 | `level` | enum | `'מתחיל' \| 'בינוני' \| 'מתקדם'` |
-| `slots` | array | `[{ day, time }]` — `day` is `0..5` indexing `DAYS = ['ראשון','שני','שלישי','רביעי','חמישי','שישי']` (Sun–Fri, no Saturday); `time` is `'HH:MM'`. **This array is the schedule.** Stored in the Sheet as a JSON string, parsed back on read. |
+| `slots` | array | `[{ day, time, calId? }]` — `day` is `0..5` indexing `DAYS = ['ראשון','שני','שלישי','רביעי','חמישי','שישי']` (Sun–Fri, no Saturday); `time` is `'HH:MM'`. **This array is the schedule.** Stored in the Sheet as a JSON string, parsed back on read. `calId` (added 2026-08-13) is the Google Calendar recurring-event-series ID for that slot, set once the first sync round-trip completes — see "Calendar sync" below. |
 | `day`, `time` | number/string | denormalized copy of `slots[0]`, kept for legacy/simple lookups — always derived, never edit directly without also updating `slots` |
 | `price` | number | ₪ per lesson, this student's rate (can differ per student) |
 | `status` | enum | `'פעיל' \| 'הפסקה' \| 'סיים'` (active / paused / finished) |
@@ -172,33 +172,86 @@ redeploy for Dana, which isn't worth it for state this ephemeral/auxiliary.
 - **`tk_sent_reminders`** (`sentRem` in state) — which WhatsApp reminders
   have already been sent, keyed by id+date so it naturally resets.
 - **`tk_schedule_exceptions`** (`scheduleExceptions` in state, added
-  2026-08-10) — one-time overrides to a student's recurring schedule, for
-  "move this Sunday's lesson to Monday" or "cancel just this week's lesson"
-  without touching the student's actual recurring `slots`. Each entry:
-  `{ id, studentId, date, type: 'moved' | 'cancelled', newDate?, newTime? }`
-  where `date` is the **original** occurrence's date (`YYYY-MM-DD`) — always
-  the lookup key, even after a moved lesson gets moved again (the exception
-  is updated in place, never duplicated). `newDate`/`newTime` only apply
-  when `type === 'moved'`.
+  2026-08-10, `type:'extra'` and `calId` added 2026-08-13) — one-time
+  overrides to a student's recurring schedule, plus standalone one-time
+  lessons that have no recurring `slots` entry at all. Each entry:
+  `{ id, studentId, date, type: 'moved' | 'cancelled' | 'extra', newDate?, newTime?, calId? }`.
+  For `'moved'`/`'cancelled'`, `date` is the **original** recurring
+  occurrence's date (`YYYY-MM-DD`) — always the lookup key, even after a
+  moved lesson gets moved again (the exception is updated in place, never
+  duplicated). `newDate`/`newTime` only apply when `type === 'moved'`. For
+  `'extra'`, `date`/`time` (not `newDate`/`newTime`) hold the lesson's
+  actual date/time directly — there's no "original" since it never had a
+  recurring slot. `calId` is that occurrence's Google Calendar event ID —
+  see "Calendar sync" below.
   - Consumed in two places, both in `index.html`'s render: the home tab's
-    "השיעורים השבוע" list (now genuinely date-based — the next 7 calendar
-    days, not just weekday labels — so a change can actually attach to one
-    specific occurrence) and the "לוז" tab, which itself changed from an
-    abstract weekly template to a real-dated grid of the current calendar
-    week, fixed rows 08:00–18:00 (lessons bucket into the row matching their
-    hour; a lesson at :30 still displays its exact time inside the cell).
+    "השיעורים השבוע" list (date-based — the next 7 calendar days) and the
+    "לוז" tab's real-dated weekly grid, fixed rows 08:00–18:00 (lessons
+    bucket into the row matching their hour; a lesson at :30 still displays
+    its exact time inside the cell). The לוז tab supports navigating to any
+    week (`scheduleWeekOffset` in state, session-only — not persisted,
+    resets to the current week on reload) via ‹/› arrows and a "השבוע
+    הנוכחי" reset button, added 2026-08-13 specifically so a lesson booked
+    more than a few days out is actually visible somewhere.
   - A **moved** lesson's original slot is not shown at all (no "moved from"
-    ghost row) — only the relocated occurrence appears, tagged "הועבר מ-X",
-    with the same move/cancel-once icons as any normal occurrence (moving or
-    cancelling it again just updates/replaces the same exception). A
-    **cancelled** lesson still shows at its original slot, struck through,
+    ghost row) — only the relocated occurrence appears, tagged "הועבר מ-X".
+    A **cancelled** lesson still shows at its original slot, struck through,
     tagged "בוטל לשיעור זה" — there's no undo control for either case by
-    design (Dana's call — re-move or re-add manually instead).
+    design (Dana's call — re-move or re-add manually instead). An **extra**
+    lesson appears at its own date/time tagged "שיעור חד-פעמי" /
+    "חד-פעמי" (badge text differs slightly between the home list and the
+    לוז grid chip), with the same move/cancel icons — "cancel" on an extra
+    deletes the exception outright (there's no recurring pattern underneath
+    to fall back to, unlike cancelling a real recurring occurrence).
   - The לוז grid additionally supports **drag-and-drop** (desktop only) to
-    create the same 'moved' exception by dragging a lesson chip to another
-    cell — same data, just a second way to write it. Dragging a chip back
-    onto its own original cell deletes the exception instead of writing a
-    same→same one.
+    reschedule: dragging a regular recurring chip creates/updates a
+    `'moved'` exception; dragging an `'extra'` chip updates its own
+    `date`/`time` in place (no new exception created). Dragging a moved
+    chip back onto its own original cell deletes the exception (undoes the
+    move) instead of writing a same→same one.
+  - **Lesson-number suffix**: לוז grid chip names append
+    `' - שיעור ' + student.currentLesson` when that field is set (e.g.
+    "תמי כרמלי - שיעור 1"), added 2026-08-13. Home-list rows don't get this
+    suffix — scoped to the לוז grid only, per Dana's request.
+
+## Calendar sync (added 2026-08-13)
+
+Every lesson-scheduling action mirrors to Dana's default Google Calendar
+with a 60-minute popup reminder, via the same Apps Script Web App used for
+Sheets sync (`google-sheets-sync.gs`'s `doPost` branches on `body.calendar`
+before falling through to the sheet-write path — see
+`google-sheets-setup.txt`'s 2026-08-13 entry for the redeploy/permission
+steps this required). Three client triggers, all in `index.html`'s `save()`
+and the לוז grid's `onDropCell`:
+
+- **New/edited recurring slot** (`modal:'student'`) → a Calendar **event
+  series** (`kind:'series'`), weekly on that slot's weekday. The series ID
+  comes back async and is written onto `student.slots[i].calId` — slots are
+  matched to their previous version by `(day, time)` pair (not array index)
+  so unrelated slots keep their `calId` across an edit. Removing a slot (or
+  the whole student) deletes its series.
+- **One-time lesson** (`modal:'extraLesson'`, or dragging an `'extra'` chip)
+  → a single Calendar event (`kind:'single'`). First save creates it and
+  stores `calId` on the exception; later edits/drags call `update` on that
+  same `calId` instead of creating a duplicate.
+- **Reschedule** (`modal:'moveLesson'`, or dragging a regular slot chip) →
+  the *first* move cancels just that one Calendar occurrence out of the
+  recurring series (`action:'cancelInstance'`, matched by title+date — this
+  app has no per-instance API, only title/day matching) and creates a new
+  single event for the new date/time; a *second* move of the same
+  occurrence updates that single event instead of touching the series
+  again. Dragging back onto the exact original slot restores it as a
+  one-off single event (not a new series — recreating the series would
+  start a second, duplicate recurrence).
+
+All calendar calls are fire-and-forget from the UI's perspective (local
+state saves immediately; the Calendar round-trip patches `calId` back in
+once it resolves) and fail silently if `sheetUrl` isn't configured or the
+request errors — a missing calendar sync never blocks saving the lesson
+itself. **Known gap**: cancelling a single recurring occurrence
+(`type:'cancelled'`, the "ביטול חד־פעמי" action) does *not* remove the
+Calendar event — out of scope per Dana's explicit choice when this was
+built, not an oversight.
 
 ## Reports tab (דוחות) — index.html
 

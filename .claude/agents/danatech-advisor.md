@@ -53,6 +53,7 @@ Google Sheets sync is now built into `index.html`. Details for future work:
 - **Server side**: [google-sheets-sync.gs](google-sheets-sync.gs) — paste into a Google Sheet's Extensions → Apps Script, deploy as a Web App ("Execute as: Me", "Who has access: Anyone"). `doGet` returns `{students, payments, notes}`; `doPost` takes `{sheet, data}` and overwrites that tab (whole-list replace, matching the app's own persist model — no per-row diffing).
 - **Setup guide for Dana**: [google-sheets-setup.txt](google-sheets-setup.txt) — plain-language, no jargon, matches her existing README.txt style.
 - POST uses `Content-Type: text/plain` deliberately (not `application/json`) — this avoids a CORS preflight, which Apps Script Web Apps don't handle. Don't "fix" this to standard JSON content-type; it'll break the sync silently.
+- **Calendar sync (2026-08-13)**: the same `doPost` endpoint also handles Google Calendar writes, discriminated by `body.calendar: true` (checked before the sheet-write branch). Full mechanics — the three trigger points, series-vs-single-event logic, the `calId` fields, the per-instance-cancel workaround — are in the `danatech-data-model` skill's "Calendar sync" section; don't duplicate that here.
 
 Original decision record (why these choices), kept for context:
 

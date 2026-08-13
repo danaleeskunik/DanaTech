@@ -25,10 +25,99 @@ function doGet(e) {
 
 function doPost(e) {
   const body = JSON.parse(e.postData.contents);
+  if (body.calendar) return handleCalendar(body);
   const name = body.sheet;
   if (!SHEETS[name]) return json({ ok: false, error: 'unknown sheet: ' + name });
   writeSheet(name, Array.isArray(body.data) ? body.data : []);
   return json({ ok: true });
+}
+
+// ---- Google Calendar sync ----
+// Every lesson the app schedules (new weekly student, one-time lesson, or a
+// reschedule) mirrors to Dana's default Google Calendar with a 60-minute
+// popup reminder. Weekly students become a recurring event series; one-time
+// and rescheduled lessons become a single event. The client stores the
+// returned calId back on the student's slot / schedule-exception record so
+// later edits update the same Calendar event instead of creating a
+// duplicate.
+const REMINDER_MIN_BEFORE = 60;
+const DEFAULT_LESSON_MIN = 45;
+const CAL_WEEKDAYS = [CalendarApp.Weekday.SUNDAY, CalendarApp.Weekday.MONDAY, CalendarApp.Weekday.TUESDAY, CalendarApp.Weekday.WEDNESDAY, CalendarApp.Weekday.THURSDAY, CalendarApp.Weekday.FRIDAY, CalendarApp.Weekday.SATURDAY];
+
+function handleCalendar(body) {
+  try {
+    const cal = CalendarApp.getDefaultCalendar();
+    const durationMin = body.durationMin || DEFAULT_LESSON_MIN;
+
+    // Cancel just one occurrence of a recurring series (used the first time
+    // a weekly lesson is moved to a one-off date) — matching by title on
+    // that day, since Apps Script has no direct "instance by date" lookup.
+    if (body.action === 'cancelInstance') {
+      const day = parseDateOnly(body.date);
+      cal.getEventsForDay(day).filter(ev => ev.getTitle() === body.title).forEach(ev => ev.deleteEvent());
+      return json({ ok: true });
+    }
+
+    if (body.kind === 'series') {
+      if (body.action === 'delete') {
+        if (body.calId) {
+          const series = cal.getEventSeriesById(body.calId);
+          if (series) series.deleteEventSeries();
+        }
+        return json({ ok: true });
+      }
+      const start = nextDateForWeekday(body.weekday, body.time);
+      const end = new Date(start.getTime() + durationMin * 60000);
+      const recurrence = CalendarApp.newRecurrence().addWeeklyRule().onlyOnWeekday(CAL_WEEKDAYS[Number(body.weekday)]);
+      const series = cal.createEventSeries(body.title, start, end, recurrence);
+      series.addPopupReminder(REMINDER_MIN_BEFORE);
+      return json({ ok: true, calId: series.getId() });
+    }
+
+    // kind === 'single' (one-time lesson, or a rescheduled occurrence)
+    if (body.action === 'delete') {
+      if (body.calId) {
+        const ev = cal.getEventById(body.calId);
+        if (ev) ev.deleteEvent();
+      }
+      return json({ ok: true });
+    }
+    if (body.action === 'update' && body.calId) {
+      const ev = cal.getEventById(body.calId);
+      if (ev) {
+        const start = combineDateTime(body.date, body.time);
+        ev.setTime(start, new Date(start.getTime() + durationMin * 60000));
+        return json({ ok: true, calId: body.calId });
+      }
+    }
+    const start = combineDateTime(body.date, body.time);
+    const ev = cal.createEvent(body.title, start, new Date(start.getTime() + durationMin * 60000));
+    ev.removeAllReminders();
+    ev.addPopupReminder(REMINDER_MIN_BEFORE);
+    return json({ ok: true, calId: ev.getId() });
+  } catch (err) {
+    return json({ ok: false, error: String(err) });
+  }
+}
+
+function combineDateTime(dateStr, timeStr) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const [hh, mm] = (timeStr || '10:00').split(':').map(Number);
+  return new Date(y, m - 1, d, hh, mm);
+}
+
+function parseDateOnly(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function nextDateForWeekday(weekday, timeStr) {
+  const today = new Date();
+  const d = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  d.setDate(d.getDate() + ((Number(weekday) - d.getDay() + 7) % 7));
+  const [hh, mm] = (timeStr || '10:00').split(':').map(Number);
+  d.setHours(hh, mm, 0, 0);
+  return d;
 }
 
 function getSheet_(name) {
