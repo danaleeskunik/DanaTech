@@ -10,3 +10,5 @@ If creating visual artifacts (slides, mocks, throwaway prototypes, etc), copy as
 If the user invokes this skill without any other guidance, ask them what they want to build or design, ask some questions, and act as an expert designer who outputs HTML artifacts _or_ production code, depending on the need.
 
 Note: this brand is Hebrew, right-to-left. Set `dir="rtl"` and `lang="he"` on the document unless the user asks otherwise.
+
+For production code (not throwaway mocks): also read readme.md's "Engineering conventions" section — every app must be responsive down to phone width, table columns must be sortable, and any app syncing to a live backend must refetch on tab-resume (`visibilitychange`/`pageshow`), not just once on mount.

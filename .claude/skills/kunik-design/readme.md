@@ -72,13 +72,23 @@ Both apps are Hebrew, RTL, navy-headed, card-based, and share one component voca
 
 **Transparency and blur.** No blur anywhere. Transparency appears only on navy: 7–8% white fills for header controls and selected rail items, 22% white borders, 12% white dividers. The modal scrim is `rgba(15,25,40,.45)` — tinted navy, not neutral black.
 
-**Layout rules.** One fixed element: the 52px navy home pill, top-left (the trailing corner in RTL), hidden in print. Headers are sticky; the active tab is filled with the canvas colour and squared at the bottom so it merges into the page. Tables scroll horizontally inside their card with a sticky action column. Long tab strips fade at both ends with a linear-gradient mask.
+**Layout rules.** One fixed element: the 52px navy home pill, top-left (the trailing corner in RTL), hidden in print. Headers are sticky; the active tab is filled with the canvas colour and squared at the bottom so it merges into the page. Tables scroll horizontally inside their card with a sticky action column, fixed-width sortable columns (see Engineering conventions below). Long tab strips fade at both ends with a linear-gradient mask — the same treatment the mobile nav rail uses.
 
 **Imagery.** Exactly one image in the entire brand: Dana's portrait, cropped to a circle, 5px white ring, eyes positioned at 18% from the top. Warm, softly lit, neutral grey background. No stock photography, no illustration, no decorative graphics.
 
 **Tap targets and readability.** 44px minimum for anything a person taps, 52px for the home pill, 46px form fields, 16px body text on instructional surfaces. The only exception is the 30px icon button inside dense data tables.
 
 ---
+
+## Engineering conventions
+
+Added 2026-08-12 after auditing kunikHome on a phone screen for the first time — the brand's own premise ("the operator is a single teacher working from a phone between house calls") had never actually been checked against the product. These apply to every app built on this system, not just kunikHome.
+
+**Responsive, mobile-first.** Every screen must work down to a 375px-wide phone, not just resize gracefully by accident. The one layout pattern that needs an explicit breakpoint (things a fixed-width sidebar can't do with fluid sizing alone) is the navy rail: below `860px` it stops being a 250px vertical column and becomes a compact sticky horizontal strip — logo left, sync/export/import icons right, nav items as a horizontally-scrolling row in between (`overflow-x:auto`, no visible scrollbar, matches the existing "long tab strips fade at both ends" pattern below). Card grids using `repeat(auto-fit,minmax(230px,1fr))` already reflow to one column for free — don't add a breakpoint for those. Tables keep scrolling horizontally inside their card (existing pattern, unchanged) rather than trying to reflow columns into cards on narrow screens — that's a bigger redesign this system hasn't attempted.
+
+**Table columns are sortable.** See `components/data/DataTable.prompt.md` for the mechanics (fixed pixel widths + `table-layout:fixed`, click-to-sort with an arrow indicator, type-aware comparison).
+
+**Multi-device data freshness.** Any app with a live backend (Sheets sync, etc.) must refetch when the tab regains focus, not only once on first load — `visibilitychange` and `pageshow` listeners re-triggering the load call. Mobile browsers routinely suspend/bfcache a backgrounded tab instead of reloading it, so a load-once-on-mount app will silently show whatever was true whenever the tab was first opened, drifting further from reality (and from what other devices show) the longer it's left open in the background. This was a real bug, not a hypothetical: kunikHome's phone view was showing stale data against the desktop view for exactly this reason.
 
 ## Iconography
 
