@@ -6,16 +6,20 @@ const SHEETS = {
   students: ['id', 'name', 'phone', 'city', 'level', 'slots', 'day', 'time', 'price', 'status', 'contactName', 'contactPhone', 'referral', 'birthday', 'currentLesson', 'notes'],
   payments: ['id', 'studentId', 'month', 'lessons', 'price', 'total', 'paid', 'date'],
   notes: ['id', 'studentId', 'date', 'summary', 'homework', 'mood'],
-  contacts: ['id', 'name', 'phone', 'lastContact', 'referredBy', 'notes']
+  contacts: ['id', 'name', 'phone', 'lastContact', 'referredBy', 'notes'],
+  scheduleExceptions: ['id', 'studentId', 'type', 'date', 'time', 'newDate', 'newTime', 'calId']
 };
 
-const TAB_NAMES = { students: 'תלמידות', payments: 'תשלומים', notes: 'סיכומי שיעור', contacts: 'אנשי קשר' };
+const TAB_NAMES = { students: 'תלמידות', payments: 'תשלומים', notes: 'סיכומי שיעור', contacts: 'אנשי קשר', scheduleExceptions: 'חריגות לוז' };
 
 // Columns forced to plain text — Sheets auto-converts bare digit/date-looking
-// strings (phone numbers, YYYY-MM-DD) to numbers/dates, which drops leading
-// zeros and breaks the app's string parsing. Same fix as the original phone
-// crash (2026-07-31), applied to every column with the same shape.
-const TEXT_COLS = ['phone', 'contactPhone', 'birthday', 'lastContact'];
+// strings (phone numbers, YYYY-MM-DD, HH:MM) to numbers/dates/times, which
+// drops leading zeros and breaks the app's string parsing. Same fix as the
+// original phone crash (2026-07-31), applied to every column with the same
+// shape — including 'date'/'time' here now that scheduleExceptions uses them,
+// which also self-heals any pre-existing payments/notes/students rows since
+// writeSheet always rewrites the whole sheet from scratch.
+const TEXT_COLS = ['phone', 'contactPhone', 'birthday', 'lastContact', 'date', 'newDate', 'time', 'newTime'];
 
 function doGet(e) {
   const out = {};
