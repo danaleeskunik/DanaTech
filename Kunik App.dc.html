@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/tokens/colors.css">
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/tokens/typography.css">
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/tokens/radius.css">
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/tokens/elevation.css">
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/tokens/motion.css">
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/styles.css">
+<script>
+(function () {
+  var SRC = '_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/_ds_bundle.js';
+  if (window.__dsBundleLoading || document.querySelector('script[src="' + SRC + '"]')) return;
+  window.__dsBundleLoading = true;
+  function load() {
+    var s = document.createElement('script');
+    s.src = SRC;
+    document.head.appendChild(s);
+  }
+  function wait() {
+    if (window.React && window.React.createElement) { load(); return; }
+    setTimeout(wait, 10);
+  }
+  wait();
+})();
+</script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; direction: rtl; background: #F4F7FB; color: #121213; font-family: Rubik, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #006EE5; }
+  a:hover { color: #0055B2; }
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+  <sc-if value="{{ notHome }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ goHome }}" style="position:fixed;top:14px;left:14px;z-index:20">
+      <x-import component-from-global-scope="KunikDesignSystem_63ae72.HomeFab" href="#" title="חזרה לבית" hint-size="52px,52px"></x-import>
+    </div>
+  </sc-if>
+
+  <div style="background:#0F2E52;color:#fff;position:sticky;top:0;z-index:6">
+    <div style="max-width:1240px;margin:0 auto;padding:18px clamp(14px,4vw,24px) 0">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:13px;min-width:0">
+          <x-import component-from-global-scope="KunikDesignSystem_63ae72.Logo" height="28" hint-size="32px,28px"></x-import>
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <div style="font-size:20px;font-weight:800">טק בגובה העיניים</div>
+            <div style="font-size:13.5px;font-weight:500;color:#9CC7F5">דנה קוניק · רמת השרון</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:stretch;gap:9px">
+          <div style="display:flex;align-items:center;gap:8px;height:47px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.22);border-radius:9px;padding:0 13px">
+            <x-import component-from-global-scope="KunikDesignSystem_63ae72.Icon" name="bell" size="16" hint-size="16px,16px"></x-import>
+            <div style="font-size:13px;font-weight:700;color:#fff">התראה {{ reminderLabel }} לפני</div>
+          </div>
+          <x-import component-from-global-scope="KunikDesignSystem_63ae72.SyncStatus" state="synced" label="מסונכרן ל-Google" sub="{{ syncSub }}" style="height:47px" hint-size="180px,47px"></x-import>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:16px;overflow:auto">
+        <sc-for list="{{ navTabs }}" as="t" hint-placeholder-count="4">
+          <div onClick="{{ t.onClick }}" style="padding:12px 20px;border-radius:10px 10px 0 0;font-size:14.5px;font-weight:800;cursor:pointer;white-space:nowrap;background:{{ t.bg }};color:{{ t.fg }}">{{ t.label }}</div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:1240px;width:100%;margin:0 auto;padding:24px clamp(14px,4vw,24px) 72px;display:flex;flex-direction:column;gap:22px">
+
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:22px">
+
+        <div style="position:relative;overflow:hidden;border-radius:18px;background:radial-gradient(120% 130% at 85% 0%, #1B4C88, #0F2E52 60%, #0A2340);color:#fff;padding:30px 28px">
+          <div style="position:absolute;inset:0;opacity:.09;background-image:radial-gradient(#fff 1px, transparent 1px);background-size:24px 24px"></div>
+          <div style="position:relative;display:flex;flex-direction:column;gap:20px">
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <div style="font-size:13px;font-weight:700;letter-spacing:1.4px;color:#9CC7F5">השיעור הבא שלי</div>
+              <div style="font-size:32px;font-weight:800;line-height:1.15">{{ next.name }}</div>
+              <div style="font-size:16.5px;font-weight:600;color:#D7E6F8">{{ next.when }} · {{ next.levelName }} · מפגש {{ next.at }}</div>
+              <div style="font-size:14.5px;font-weight:500;color:#9CC7F5">{{ next.kindLabel }} · תזכורת תגיע לטלפון {{ reminderLabel }} לפני</div>
+            </div>
+            <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:14px 16px;display:flex;gap:11px;align-items:flex-start;max-width:640px">
+              <div style="flex:none;color:#9CC7F5;margin-top:1px">
+                <x-import component-from-global-scope="KunikDesignSystem_63ae72.Icon" name="document" size="17" hint-size="17px,17px"></x-import>
+              </div>
+              <div style="flex:1;min-width:0;font-size:15px;font-weight:500;color:#D7E6F8;line-height:1.5;text-wrap:pretty">{{ next.noteLine }}</div>
+            </div>
+            <div style="display:flex;gap:9px;flex-wrap:wrap">
+              <x-import dc-props="{{ h44 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="primary" icon="book" onClick="{{ openPlans }}" hint-size="180px,44px">מערך המפגש הזה</x-import>
+              <x-import dc-props="{{ waFab }}" component-from-global-scope="KunikDesignSystem_63ae72.IconButton" icon="whatsapp" tone="success" title="הודעה לתלמיד/ה" href="{{ next.waHref }}" hint-size="44px,44px"></x-import>
+              <x-import dc-props="{{ navyFab }}" component-from-global-scope="KunikDesignSystem_63ae72.IconButton" icon="calendar" title="הלו״ז השבועי" onClick="{{ openWeek }}" hint-size="44px,44px"></x-import>
+            </div>
+
+            <sc-if value="{{ hasTodayRest }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:11px;padding-top:20px;border-top:1px solid rgba(255,255,255,.12)">
+                <div style="font-size:13px;font-weight:700;letter-spacing:1.4px;color:#9CC7F5">{{ todayRestLabel }}</div>
+                <sc-for list="{{ todayRest }}" as="t" hint-placeholder-count="2">
+                  <div style="display:flex;align-items:center;gap:15px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:13px 16px;flex-wrap:wrap">
+                    <div style="flex:none;font-family:Heebo,sans-serif;font-size:20px;font-weight:900;letter-spacing:-.5px;color:#fff;min-width:62px">{{ t.time }}</div>
+                    <div style="flex:1 1 200px;min-width:0;display:flex;flex-direction:column;gap:2px">
+                      <div style="font-size:17px;font-weight:800;color:#fff">{{ t.name }}</div>
+                      <div style="font-size:13.5px;font-weight:500;color:#9CC7F5">{{ t.levelName }} · {{ t.kindLabel }}</div>
+                    </div>
+                    <div style="flex:none;display:flex;gap:8px;flex-wrap:wrap">
+                      <x-import dc-props="{{ h36 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="onNavy" size="sm" icon="book" onClick="{{ t.onPlan }}" hint-size="110px,36px">מערך המפגש</x-import>
+                      <x-import dc-props="{{ h36 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="whatsapp" size="sm" icon="whatsapp" href="{{ t.waHref }}" hint-size="110px,36px">הודעה</x-import>
+                    </div>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ todayIsEmpty }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;align-items:center;gap:11px;border:1px dashed rgba(255,255,255,.28);border-radius:12px;padding:13px 16px">
+                    <div style="flex:none;color:#9CC7F5;display:flex">
+                      <x-import component-from-global-scope="KunikDesignSystem_63ae72.Icon" name="calendar" size="17" hint-size="17px,17px"></x-import>
+                    </div>
+                    <div style="flex:1;min-width:0;font-size:14.5px;font-weight:500;color:#D7E6F8">{{ todayEmptyText }}</div>
+                    <x-import dc-props="{{ h36 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="onNavy" size="sm" icon="plus" onClick="{{ openWeek }}" hint-size="120px,36px">פתחי את הלו״ז</x-import>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px">
+          <x-import component-from-global-scope="KunikDesignSystem_63ae72.DomainCard" icon="bars" label="האזור האישי" count="{{ homeAdminCount }}" color="#0F2E52" background="#EAEEF4" onClick="{{ openAdmin }}" hint-size="100%,150px"></x-import>
+          <x-import component-from-global-scope="KunikDesignSystem_63ae72.DomainCard" icon="book" label="מערכי שיעור" count="{{ homePlansCount }}" color="#006EE5" background="#EAF2FD" onClick="{{ openPlans }}" hint-size="100%,150px"></x-import>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+          <x-import component-from-global-scope="KunikDesignSystem_63ae72.StatCard" label="מפגשים השבוע" value="{{ statWeek }}" sub="{{ statWeekSub }}" hint-size="100%,110px"></x-import>
+          <x-import component-from-global-scope="KunikDesignSystem_63ae72.StatCard" label="תלמידים פעילים" value="{{ statStudents }}" sub="{{ statStudentsSub }}" hint-size="100%,110px"></x-import>
+          <x-import component-from-global-scope="KunikDesignSystem_63ae72.StatCard" label="ממתין לתשלום" value="{{ statDue }}" sub="{{ statDueSub }}" color="#BE0000" hint-size="100%,110px"></x-import>
+          <x-import component-from-global-scope="KunikDesignSystem_63ae72.StatCard" label="לידים פתוחים" value="{{ statLeads }}" sub="{{ statLeadsSub }}" color="#E1631B" hint-size="100%,110px"></x-import>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:22px">
+
+        <div style="display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;margin-inline:-2px;padding-inline:2px">
+          <sc-for list="{{ subTabs }}" as="t" hint-placeholder-count="5">
+            <x-import dc-props="{{ h44 }}" component-from-global-scope="KunikDesignSystem_63ae72.LevelPill" label="{{ t.label }}" color="#0F2E52" selected="{{ t.on }}" dot="{{ false }}" onClick="{{ t.onClick }}" style="flex:0 0 auto" hint-size="120px,44px"></x-import>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ subToday }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start">
+
+            <div style="flex:2 1 320px;display:flex;flex-direction:column;gap:16px;min-width:0">
+              <x-import component-from-global-scope="KunikDesignSystem_63ae72.SectionLabel" accent="#006EE5" hint-size="100%,20px">{{ todayHeading }}</x-import>
+              <sc-if value="{{ hasToday }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;flex-direction:column;gap:11px">
+                  <sc-for list="{{ todayList }}" as="o" hint-placeholder-count="2">
+                    <div style="background:#fff;border:1px solid #E4EAF1;border-radius:12px;padding:14px 16px;box-shadow:0 2px 8px rgba(15,46,82,.06);display:flex;flex-direction:column;gap:12px">
+                      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+                        <div style="flex:none;width:64px;height:52px;border-radius:10px;background:{{ o.color }};color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                          <div style="font-family:Heebo,sans-serif;font-size:16px;font-weight:900">{{ o.time }}</div>
+                          <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,.75)">{{ o.dayShort }}</div>
+                        </div>
+                        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+                          <div style="font-size:17px;font-weight:800;text-decoration:{{ o.strike }}">{{ o.name }}</div>
+                          <div style="font-size:13.5px;font-weight:500;color:#6A6D70">{{ o.meta }}</div>
+                        </div>
+                        <div style="flex:1 1 auto;display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:7px">
+                          <x-import dc-props="{{ badge44 }}" component-from-global-scope="KunikDesignSystem_63ae72.Badge" tone="{{ o.badgeTone }}" hint-size="70px,44px">{{ o.badgeLabel }}</x-import>
+                          <x-import dc-props="{{ h44 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="secondary" size="sm" icon="edit" onClick="{{ o.onNote }}" hint-size="120px,44px">{{ o.noteBtnLabel }}</x-import>
+                          <x-import dc-props="{{ h44 }}" component-from-global-scope="KunikDesignSystem_63ae72.IconButton" icon="whatsapp" tone="success" title="שלחי הודעה" href="{{ o.waHref }}" hint-size="44px,44px"></x-import>
+                        </div>
+                      </div>
+                      <div style="display:flex;gap:10px;align-items:flex-start;background:#F7F9FC;border:1px solid #E4EAF1;border-radius:10px;padding:11px 13px">
+                        <div style="flex:none;color:#8D9296;margin-top:1px">
+                          <x-import component-from-global-scope="KunikDesignSystem_63ae72.Icon" name="document" size="16" hint-size="16px,16px"></x-import>
+                        </div>
+                        <div style="flex:1;min-width:0;font-size:14.5px;font-weight:500;color:#4A4D50;line-height:1.5;text-wrap:pretty">{{ o.noteLine }}</div>
+                      </div>
+                      <sc-if value="{{ o.noteOpen }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex;flex-direction:column;gap:10px;border-top:1px solid #F0F3F7;padding-top:12px">
+                          <div style="font-size:13.5px;font-weight:700;color:#6A6D70">סיכום המפגש — מה עשינו, מה נשאר לפעם הבאה</div>
+                          <textarea value="{{ noteDraft }}" onChange="{{ setNoteDraft }}" placeholder="לדוגמה: תרגלנו שליחת תמונה בוואטסאפ. להתחיל את הפעם הבאה בחזרה על מצלמה." style="width:100%;min-height:96px;resize:vertical;padding:13px 14px;border:2px solid #DFE2E4;border-radius:10px;background:#F7F9FC;font-family:Rubik,sans-serif;font-size:16px;font-weight:500;line-height:1.5;color:#121213;outline:none"></textarea>
+                          <div style="display:flex;gap:8px;flex-wrap:wrap">
+                            <x-import dc-props="{{ h36 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="primary" size="sm" icon="check" onClick="{{ o.onSaveNote }}" hint-size="110px,36px">שמרי סיכום</x-import>
+                            <x-import dc-props="{{ h36 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="quiet" size="sm" onClick="{{ o.onNote }}" hint-size="80px,36px">ביטול</x-import>
+                          </div>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ noToday }}" hint-placeholder-val="{{ false }}">
+                <x-import component-from-global-scope="KunikDesignSystem_63ae72.EmptyState" hint-size="100%,90px">אין מפגשים ביום הזה. אפשר לקבוע מפגש חדש בלשונית הלו״ז.</x-import>
+              </sc-if>
+
+              <x-import component-from-global-scope="KunikDesignSystem_63ae72.SectionLabel" accent="#BE0000" hint-size="100%,20px">דורש טיפול</x-import>
+              <div style="display:flex;flex-direction:column;gap:11px">
+                <sc-for list="{{ alerts }}" as="a" hint-placeholder-count="2">
+                  <div style="display:flex;align-items:center;gap:13px;background:#fff;border:1px solid #E4EAF1;border-radius:12px;padding:13px 16px;flex-wrap:wrap">
+                    <div style="flex:none;width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:{{ a.bg }};color:{{ a.fg }}">
+                      <x-import component-from-global-scope="KunikDesignSystem_63ae72.Icon" name="{{ a.icon }}" size="19" hint-size="19px,19px"></x-import>
+                    </div>
+                    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+                      <div style="font-size:15.5px;font-weight:700">{{ a.title }}</div>
+                      <div style="font-size:13.5px;font-weight:500;color:#6A6D70">{{ a.meta }}</div>
+                    </div>
+                    <x-import dc-props="{{ h36 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="secondary" size="sm" onClick="{{ a.onClick }}" hint-size="90px,36px">{{ a.action }}</x-import>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="flex:1 1 260px;display:flex;flex-direction:column;gap:16px;min-width:0">
+              <x-import component-from-global-scope="KunikDesignSystem_63ae72.Card" size="md" hint-size="100%,220px">
+                <div style="font-size:17px;font-weight:800">התראות</div>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                    <div style="font-size:14.5px;font-weight:600;color:#4A4D50">שעה לפני כל מפגש</div>
+                    <x-import component-from-global-scope="KunikDesignSystem_63ae72.Badge" tone="green" hint-size="60px,26px">פעיל</x-import>
+                  </div>
+                  <div style="height:1px;background:#F0F3F7"></div>
+                  <div style="font-size:14px;font-weight:500;line-height:1.5;color:#6A6D70">ההתראה יוצאת מיומן Google. כל מפגש שנקבע כאן — בטלפון או במחשב — נכתב ליומן עם תזכורת, וההתראה מגיעה לטלפון גם כשהאפליקציה סגורה.</div>
+                </div>
+              </x-import>
+
+              <x-import component-from-global-scope="KunikDesignSystem_63ae72.Card" size="md" hint-size="100%,200px">
+                <div style="font-size:17px;font-weight:800">מה בשבוע הזה</div>
+                <div style="display:flex;flex-direction:column;gap:9px">
+                  <sc-for list="{{ weekSummary }}" as="d" hint-placeholder-count="6">
+                    <div style="display:flex;flex-direction:column;gap:6px;padding:8px 0;border-bottom:1px solid #F0F3F7">
+                      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                        <div style="font-size:14.5px;font-weight:800;color:{{ d.labelFg }}">{{ d.label }}</div>
+                        <div style="font-size:12.5px;font-weight:600;color:#8D9296">{{ d.count }}</div>
+                      </div>
+                      <sc-if value="{{ d.hasItems }}" hint-placeholder-val="{{ true }}">
+                        <div style="display:flex;flex-direction:column;gap:4px">
+                          <sc-for list="{{ d.items }}" as="o" hint-placeholder-count="2">
+                            <div style="display:flex;align-items:center;gap:9px">
+                              <div style="flex:none;width:4px;height:4px;border-radius:50%;background:{{ o.color }}"></div>
+                              <div style="flex:none;font-family:Heebo,sans-serif;font-size:13.5px;font-weight:900;color:#2A2D30;min-width:42px">{{ o.time }}</div>
+                              <div style="flex:1;min-width:0;font-size:13.5px;font-weight:600;color:#4A4D50;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ o.name }}</div>
+                            </div>
+                          </sc-for>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </x-import>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ subWeek }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:18px">
+
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+              <div style="display:flex;align-items:center;gap:9px">
+                <x-import dc-props="{{ h44 }}" component-from-global-scope="KunikDesignSystem_63ae72.IconButton" icon="chevron-right" tone="neutral" title="שבוע קודם" onClick="{{ prevWeek }}" hint-size="44px,44px"></x-import>
+                <div style="font-size:18px;font-weight:800;min-width:190px;text-align:center">{{ weekLabel }}</div>
+                <x-import dc-props="{{ h44 }}" component-from-global-scope="KunikDesignSystem_63ae72.IconButton" icon="chevron-left" tone="neutral" title="שבוע הבא" onClick="{{ nextWeek }}" hint-size="44px,44px"></x-import>
+                <x-import dc-props="{{ h36 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="quiet" size="sm" onClick="{{ thisWeek }}" hint-size="90px,36px">השבוע</x-import>
+              </div>
+              <x-import dc-props="{{ h44 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="primary" icon="plus" onClick="{{ toggleForm }}" hint-size="150px,44px">{{ formToggleLabel }}</x-import>
+            </div>
+
+            <sc-if value="{{ formOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="background:#fff;border:1px solid #E4EAF1;border-radius:16px;padding:22px;box-shadow:0 2px 8px rgba(15,46,82,.06);display:flex;flex-direction:column;gap:18px">
+                <div style="display:flex;flex-direction:column;gap:4px">
+                  <div style="font-size:19px;font-weight:800">מפגש חדש</div>
+                  <div style="font-size:14px;font-weight:500;color:#6A6D70">בחרי אם זה מפגש בודד או קביעה חוזרת. קביעה חוזרת נשמרת פעם אחת ומייצרת את כל המפגשים.</div>
+                </div>
+
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <sc-for list="{{ repOptions }}" as="r" hint-placeholder-count="3">
+                    <x-import dc-props="{{ h44 }}" component-from-global-scope="KunikDesignSystem_63ae72.LevelPill" label="{{ r.label }}" color="#006EE5" selected="{{ r.on }}" onClick="{{ r.onClick }}" hint-size="130px,44px"></x-import>
+                  </sc-for>
+                </div>
+
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px">
+                  <x-import component-from-global-scope="KunikDesignSystem_63ae72.SelectField" label="תלמיד/ה" options="{{ studentOptions }}" value="{{ formSidValue }}" onChange="{{ setSid }}" hint-size="100%,74px"></x-import>
+                  <x-import component-from-global-scope="KunikDesignSystem_63ae72.SelectField" label="{{ dayLabel }}" options="{{ dayOptions }}" value="{{ formDayValue }}" onChange="{{ setDay }}" hint-size="100%,74px"></x-import>
+                  <sc-if value="{{ isTwice }}" hint-placeholder-val="{{ false }}">
+                    <x-import component-from-global-scope="KunikDesignSystem_63ae72.SelectField" label="יום שני בשבוע" options="{{ dayOptions }}" value="{{ formDay2Value }}" onChange="{{ setDay2 }}" hint-size="100%,74px"></x-import>
+                  </sc-if>
+                  <x-import component-from-global-scope="KunikDesignSystem_63ae72.SelectField" label="שעה" options="{{ timeOptions }}" value="{{ form.time }}" onChange="{{ setTime }}" hint-size="100%,74px"></x-import>
+                </div>
+
+                <div style="background:#F7F9FC;border:1px solid #E4EAF1;border-radius:12px;padding:15px 17px;display:flex;flex-direction:column;gap:8px">
+                  <div style="font-size:13px;font-weight:800;letter-spacing:1.1px;color:#8D9296">מה ייווצר</div>
+                  <div style="font-size:15.5px;font-weight:600;color:#2A2D30;line-height:1.5">{{ formPreview }}</div>
+                  <div style="font-size:13.5px;font-weight:500;color:#6A6D70">כל מפגש ייכתב ליומן Google עם תזכורת {{ reminderLabel }} לפני, ויופיע גם בטלפון וגם במחשב.</div>
+                </div>
+
+                <div style="display:flex;gap:9px;flex-wrap:wrap">
+                  <x-import dc-props="{{ h44 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="primary" icon="check" onClick="{{ saveLesson }}" hint-size="120px,44px">שמרי</x-import>
+                  <x-import dc-props="{{ h44 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="quiet" onClick="{{ toggleForm }}" hint-size="90px,44px">ביטול</x-import>
+                </div>
+              </div>
+            </sc-if>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:12px;align-items:start">
+              <sc-for list="{{ weekDaysList }}" as="d" hint-placeholder-count="6">
+                <div onDragOver="{{ d.onDragOver }}" onDragLeave="{{ d.onDragLeave }}" onDrop="{{ d.onDrop }}" style="background:{{ d.colBg }};border:{{ d.border }};border-radius:14px;box-shadow:0 2px 8px rgba(15,46,82,.06);display:flex;flex-direction:column;min-height:170px">
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid #F0F3F7;background:{{ d.headBg }};border-radius:14px 14px 0 0">
+                    <div style="font-size:15px;font-weight:800;color:{{ d.headFg }}">{{ d.label }}</div>
+                    <div style="font-family:Heebo,sans-serif;font-size:13px;font-weight:900;color:{{ d.headMeta }}">{{ d.date }}</div>
+                  </div>
+                  <div style="padding:11px;display:flex;flex-direction:column;gap:9px">
+                    <sc-for list="{{ d.items }}" as="o" hint-placeholder-count="1">
+                      <div draggable="{{ o.draggable }}" onDragStart="{{ o.onDragStart }}" onDragEnd="{{ o.onDragEnd }}" style="border:1px solid #E4EAF1;border-radius:12px;padding:11px 12px;display:flex;flex-direction:column;gap:8px;background:{{ o.cardBg }};cursor:{{ o.cursor }}">
+                        <div style="display:flex;align-items:center;gap:7px">
+                          <div style="font-family:Heebo,sans-serif;font-size:16px;font-weight:900;color:{{ o.color }}">{{ o.time }}</div>
+                          <div style="font-size:11.5px;font-weight:700;color:#8D9296">{{ o.kindLabel }}</div>
+                          <sc-if value="{{ o.showTrash }}" hint-placeholder-val="{{ true }}">
+                            <div style="margin-inline-start:auto;display:flex;gap:5px">
+                              <x-import dc-props="{{ h36 }}" component-from-global-scope="KunikDesignSystem_63ae72.IconButton" icon="edit" size="sm" tone="sunken" title="שינוי שעה" onClick="{{ o.onAskEdit }}" hint-size="30px,30px"></x-import>
+                              <x-import dc-props="{{ h36 }}" component-from-global-scope="KunikDesignSystem_63ae72.IconButton" icon="trash" size="sm" tone="danger" title="ביטול המפגש" onClick="{{ o.onAskCancel }}" hint-size="30px,30px"></x-import>
+                            </div>
+                          </sc-if>
+                        </div>
+                        <div style="font-size:15px;font-weight:800;line-height:1.25;text-decoration:{{ o.strike }};color:{{ o.nameFg }}">{{ o.name }}</div>
+                        <div style="font-size:12.5px;font-weight:500;color:#6A6D70">{{ o.levelName }}</div>
+                        <sc-if value="{{ o.isEditing }}" hint-placeholder-val="{{ false }}">
+                          <div style="display:flex;align-items:center;gap:7px">
+                            <select value="{{ o.timeValue }}" onChange="{{ o.onTimeChange }}" style="flex:1;height:38px;border:2px solid #DFE2E4;border-radius:9px;background:#F7F9FC;appearance:none;-webkit-appearance:none;padding:0 10px;font-family:Heebo,sans-serif;font-size:15px;font-weight:900;color:#2A2D30;cursor:pointer">
+                              <sc-for list="{{ o.timeOptions }}" as="t" hint-placeholder-count="6">
+                                <option value="{{ t }}">{{ t }}</option>
+                              </sc-for>
+                            </select>
+                            <x-import dc-props="{{ h36 }}" component-from-global-scope="KunikDesignSystem_63ae72.IconButton" icon="close" size="sm" tone="sunken" title="סגירה" onClick="{{ o.onEditClose }}" hint-size="30px,30px"></x-import>
+                          </div>
+                        </sc-if>
+                        <sc-if value="{{ o.isCancelled }}" hint-placeholder-val="{{ false }}">
+                          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                            <x-import component-from-global-scope="KunikDesignSystem_63ae72.Badge" tone="{{ o.badgeTone }}" size="sm" hint-size="60px,24px">{{ o.badgeLabel }}</x-import>
+                            <x-import dc-props="{{ h36 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="quiet" size="sm" onClick="{{ o.onUndo }}" hint-size="70px,32px">החזירי</x-import>
+                          </div>
+                        </sc-if>
+                        <sc-if value="{{ o.isActive }}" hint-placeholder-val="{{ true }}">
+                          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                            <sc-if value="{{ o.isConfirming }}" hint-placeholder-val="{{ false }}">
+                              <div style="display:flex;align-items:center;gap:7px;background:#FBEAEC;border-radius:10px;padding:4px 6px 4px 10px">
+                                <div style="font-size:13.5px;font-weight:700;color:#BE0000;white-space:nowrap">לבטל את המפגש?</div>
+                                <x-import dc-props="{{ h36 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="danger" size="sm" onClick="{{ o.onCancel }}" hint-size="60px,30px">כן</x-import>
+                                <x-import dc-props="{{ h36 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="quiet" size="sm" onClick="{{ o.onDismiss }}" hint-size="40px,30px">לא</x-import>
+                              </div>
+                            </sc-if>
+                          </div>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                    <sc-if value="{{ d.empty }}" hint-placeholder-val="{{ false }}">
+                      <div style="border:1px dashed #C3D4E8;border-radius:12px;padding:16px 10px;text-align:center;font-size:13px;font-weight:600;color:#8D9296">פנוי</div>
+                    </sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+
+            <x-import component-from-global-scope="KunikDesignSystem_63ae72.Callout" tone="info" label="שימי לב" hint-size="100%,70px">אפשר לגרור מפגש ליום אחר — הוא זז רק הפעם, בשעה שלו. ביטול של מפגש בודד לא מוחק את הקביעה החוזרת — היא ממשיכה בשבוע הבא. להפסקה ארוכה (חופש, אשפוז) יש ״השהיית סדרה״ בכרטיס התלמיד/ה.</x-import>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ subStudents }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <x-import component-from-global-scope="KunikDesignSystem_63ae72.SectionLabel" accent="#006EE5" hint-size="100%,20px">{{ studentsHeading }}</x-import>
+            <sc-for list="{{ studentRows }}" as="s" hint-placeholder-count="6">
+              <div style="background:#fff;border:1px solid #E4EAF1;border-radius:14px;padding:16px 18px;box-shadow:0 2px 8px rgba(15,46,82,.06);display:flex;flex-direction:column;gap:12px">
+                <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+                <div style="flex:none;width:46px;height:46px;border-radius:50%;background:{{ s.bg }};color:{{ s.color }};display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800">{{ s.initial }}</div>
+                <div style="flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:3px">
+                  <div style="font-size:17.5px;font-weight:800">{{ s.name }}</div>
+                  <div style="font-size:13.5px;font-weight:500;color:#6A6D70;direction:ltr;text-align:right">{{ s.phone }}</div>
+                </div>
+                <div style="flex:1 1 170px;min-width:0;display:flex;flex-direction:column;gap:4px">
+                  <div style="font-size:13.5px;font-weight:700;color:#2A2D30">{{ s.scheduleLabel }}</div>
+                  <div style="font-size:13px;font-weight:500;color:#6A6D70">{{ s.payLabel }}</div>
+                </div>
+                <div style="flex:1 1 auto;display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:7px">
+                  <x-import dc-props="{{ badge44 }}" component-from-global-scope="KunikDesignSystem_63ae72.Badge" tone="{{ s.badgeTone }}" hint-size="80px,44px">{{ s.badgeLabel }}</x-import>
+                  <sc-if value="{{ s.isPaused }}" hint-placeholder-val="{{ false }}">
+                    <x-import dc-props="{{ badge44 }}" component-from-global-scope="KunikDesignSystem_63ae72.Badge" tone="neutral" hint-size="90px,44px">מושהה</x-import>
+                  </sc-if>
+                  <x-import dc-props="{{ h44 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="{{ s.pauseVariant }}" onClick="{{ s.onPause }}" hint-size="110px,46px">{{ s.pauseLabel }}</x-import>
+                  <x-import dc-props="{{ h44 }}" component-from-global-scope="KunikDesignSystem_63ae72.IconButton" icon="whatsapp" tone="success" title="הודעה" href="{{ s.waHref }}" hint-size="44px,44px"></x-import>
+                </div>
+                </div>
+                <div style="font-size:14px;font-weight:500;color:#6A6D70;line-height:1.5;background:#F7F9FC;border:1px solid #E4EAF1;border-radius:10px;padding:10px 13px;text-wrap:pretty">{{ s.noteLine }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ subPay }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px">
+              <x-import component-from-global-scope="KunikDesignSystem_63ae72.StatCard" label="ממתין לתשלום" value="{{ statDue }}" sub="{{ statDueSub }}" color="#BE0000" hint-size="100%,110px"></x-import>
+              <x-import component-from-global-scope="KunikDesignSystem_63ae72.StatCard" label="שולם החודש" value="{{ statPaid }}" sub="אוגוסט 2026" color="#00A563" hint-size="100%,110px"></x-import>
+              <x-import component-from-global-scope="KunikDesignSystem_63ae72.StatCard" label="צפי החודש" value="{{ statForecast }}" sub="לפי הקביעות הקבועות" hint-size="100%,110px"></x-import>
+            </div>
+
+            <x-import component-from-global-scope="KunikDesignSystem_63ae72.SectionLabel" accent="#BE0000" hint-size="100%,20px">לא שולם</x-import>
+            <sc-if value="{{ hasUnpaid }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:11px">
+                <sc-for list="{{ unpaidRows }}" as="p" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:center;gap:14px;background:#fff;border:1px solid #E4EAF1;border-radius:12px;padding:14px 16px;flex-wrap:wrap">
+                    <div style="flex:1 1 200px;min-width:0;display:flex;flex-direction:column;gap:2px">
+                      <div style="font-size:17px;font-weight:800">{{ p.name }}</div>
+                      <div style="font-size:13.5px;font-weight:500;color:#6A6D70">{{ p.meta }}</div>
+                    </div>
+                    <div style="flex:none;font-family:Heebo,sans-serif;font-size:22px;font-weight:900;color:#BE0000;letter-spacing:-.5px">{{ p.amount }}</div>
+                    <div style="flex:none;display:flex;gap:7px">
+                      <x-import dc-props="{{ h36 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="whatsapp" size="sm" icon="whatsapp" href="{{ p.waHref }}" hint-size="110px,36px">תזכורת</x-import>
+                      <x-import dc-props="{{ h36 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="primary" size="sm" icon="check" onClick="{{ p.onPaid }}" hint-size="110px,36px">סמני כשולם</x-import>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ noUnpaid }}" hint-placeholder-val="{{ false }}">
+              <x-import component-from-global-scope="KunikDesignSystem_63ae72.EmptyState" hint-size="100%,90px">הכל שולם. הרשימה תתמלא לבד כשייווצר חוב חדש.</x-import>
+            </sc-if>
+
+            <x-import component-from-global-scope="KunikDesignSystem_63ae72.SectionLabel" accent="#00A563" hint-size="100%,20px">שולם</x-import>
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <sc-for list="{{ paidRows }}" as="p" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:14px;background:#fff;border:1px solid #E4EAF1;border-radius:12px;padding:13px 16px;flex-wrap:wrap">
+                  <div style="flex:1 1 200px;min-width:0;display:flex;flex-direction:column;gap:2px">
+                    <div style="font-size:16px;font-weight:700">{{ p.name }}</div>
+                    <div style="font-size:13.5px;font-weight:500;color:#6A6D70">{{ p.meta }}</div>
+                  </div>
+                  <div style="flex:none;font-family:Heebo,sans-serif;font-size:18px;font-weight:900;color:#00764A">{{ p.amount }}</div>
+                  <x-import component-from-global-scope="KunikDesignSystem_63ae72.Badge" tone="green" hint-size="70px,26px">שולם</x-import>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ subLeads }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <x-import component-from-global-scope="KunikDesignSystem_63ae72.Callout" tone="tip" hint-size="100%,70px">כאן יושבים מקומות שאת רוצה לפנות אליהם — דיור מוגן, מרכזי יום, מועדוני ותיקים. כל שורה זוכרת עם מי דיברת, מה נשלח ומתי לחזור.</x-import>
+
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <sc-for list="{{ leadRows }}" as="l" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;gap:15px;background:#fff;border:1px solid #E4EAF1;border-radius:12px;padding:15px 17px;flex-wrap:wrap">
+                  <div style="flex:none;width:42px;height:42px;border-radius:11px;background:{{ l.bg }};color:{{ l.fg }};display:flex;align-items:center;justify-content:center">
+                    <x-import component-from-global-scope="KunikDesignSystem_63ae72.Icon" name="heart" size="20" hint-size="20px,20px"></x-import>
+                  </div>
+                  <div style="flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:3px">
+                    <div style="font-size:17px;font-weight:800">{{ l.name }}</div>
+                    <div style="font-size:13.5px;font-weight:500;color:#6A6D70">{{ l.contact }}</div>
+                  </div>
+                  <div style="flex:1 1 170px;min-width:0;font-size:13.5px;font-weight:600;color:#4A4D50">{{ l.nextAction }}</div>
+                  <div style="flex:none;display:flex;align-items:center;gap:7px">
+                    <x-import component-from-global-scope="KunikDesignSystem_63ae72.Badge" tone="{{ l.tone }}" hint-size="90px,26px">{{ l.stageLabel }}</x-import>
+                    <x-import dc-props="{{ h36 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="secondary" size="sm" onClick="{{ l.onAdvance }}" hint-size="100px,36px">{{ l.advanceLabel }}</x-import>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isPlans }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <x-import component-from-global-scope="KunikDesignSystem_63ae72.SectionLabel" accent="#006EE5" hint-size="100%,20px">בחרי תלמיד/ה — או עברי לרמה שלמה</x-import>
+          <div style="display:flex;gap:9px;flex-wrap:wrap;align-items:center">
+            <div style="position:relative;flex:1 1 300px;max-width:420px">
+              <select value="{{ planPick }}" onChange="{{ onPlanPick }}" style="width:100%;height:46px;border:2px solid #DFE2E4;border-radius:10px;background:#F7F9FC;appearance:none;-webkit-appearance:none;padding:0 14px 0 42px;font-family:Rubik,sans-serif;font-size:16px;font-weight:600;color:#2A2D30;cursor:pointer"><path d=%22M6 9l6 6 6-6%22/></svg>');;background-repeat:no-repeat;background-position:left 16px center;appearance:none;-webkit-appearance:none;padding:0 14px 0 42px;font-family:Rubik,sans-serif;font-size:16px;font-weight:600;color:#2A2D30;cursor:pointer">
+              <option value="__all">כל הרמה — ללא תלמיד/ה מסוים</option>
+              <sc-for list="{{ studentChips }}" as="c" hint-placeholder-count="6">
+                <option value="{{ c.id }}">{{ c.optLabel }}</option>
+              </sc-for>
+            </select>
+              <div style="position:absolute;inset-inline-start:auto;left:16px;top:50%;transform:translateY(-50%);pointer-events:none;color:#6A6D70;display:flex">
+                <x-import component-from-global-scope="KunikDesignSystem_63ae72.Icon" name="chevron-down" size="17" hint-size="17px,17px"></x-import>
+              </div>
+            </div>
+            <div style="font-size:14px;font-weight:500;color:#6A6D70">{{ planPickMeta }}</div>
+          </div>
+        </div>
+
+        <sc-if value="{{ hasFocus }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:15px">
+            <div style="background:#fff;border:1px solid #E4EAF1;border-radius:14px;padding:20px 22px;box-shadow:0 2px 8px rgba(15,46,82,.06);display:flex;flex-direction:column;gap:15px">
+              <div style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap">
+                <div style="flex:none;width:58px;height:58px;border-radius:14px;background:{{ fp.bg }};color:{{ fp.color }};display:flex;flex-direction:column;align-items:center;justify-content:center">
+                  <div style="font-family:Heebo,sans-serif;font-size:24px;font-weight:900;line-height:1">{{ fp.n }}</div>
+                  <div style="font-size:10.5px;font-weight:700;letter-spacing:.4px">נושא</div>
+                </div>
+                <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:5px">
+                  <div style="font-size:13px;font-weight:800;letter-spacing:1.2px;color:#8D9296">{{ fp.who }}</div>
+                  <div style="font-size:22px;font-weight:800;line-height:1.25">{{ fp.title }}</div>
+                  <div style="font-size:15.5px;font-weight:500;color:#4A4D50;line-height:1.5;text-wrap:pretty">{{ fp.goal }}</div>
+                </div>
+                <div style="flex:none;display:flex;flex-direction:column;gap:7px;align-items:flex-start">
+                  <x-import component-from-global-scope="KunikDesignSystem_63ae72.Badge" tone="neutral" hint-size="120px,26px">{{ fp.position }}</x-import>
+                  <x-import component-from-global-scope="KunikDesignSystem_63ae72.Badge" tone="neutral" hint-size="70px,26px">{{ fp.minutes }}</x-import>
+                </div>
+              </div>
+              <div style="display:flex;gap:9px;flex-wrap:wrap">
+                <x-import dc-props="{{ h44 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="primary" icon="book" href="Teaching Toolkit Proposal.dc.html" hint-size="200px,44px">המערך המלא של המפגש</x-import>
+                <x-import dc-props="{{ h44 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="secondary" icon="check" onClick="{{ fp.onDone }}" hint-size="180px,44px">{{ fp.doneLabel }}</x-import>
+              </div>
+            </div>
+
+            <sc-if value="{{ fp.hasLast }}" hint-placeholder-val="{{ false }}">
+              <x-import component-from-global-scope="KunikDesignSystem_63ae72.Callout" tone="info" hint-size="100%,70px">{{ fp.lastText }}</x-import>
+            </sc-if>
+
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <x-import component-from-global-scope="KunikDesignSystem_63ae72.SectionLabel" accent="#00A563" hint-size="100%,20px">{{ fp.coveredLabel }}</x-import>
+              <div style="display:flex;gap:7px;flex-wrap:wrap">
+                <sc-for list="{{ coveredChips }}" as="c" hint-placeholder-count="3">
+                  <div onClick="{{ c.onRemove }}" style="cursor:pointer;display:flex;align-items:center;gap:7px;padding:8px 13px;border-radius:999px;background:{{ c.bg }};color:{{ c.color }};font-size:14px;font-weight:700">
+                    <x-import component-from-global-scope="KunikDesignSystem_63ae72.Icon" name="check" size="14" hint-size="14px,14px"></x-import>
+                    {{ c.title }}
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+                <x-import component-from-global-scope="KunikDesignSystem_63ae72.SectionLabel" accent="#8D9296" hint-size="200px,20px">{{ fp.aheadLabel }}</x-import>
+                <input type="search" value="{{ fp.searchValue }}" onChange="{{ fp.onSearch }}" placeholder="חיפוש נושא — למשל Waze" style="flex:1 1 260px;max-width:340px;height:46px;border:2px solid #DFE2E4;border-radius:10px;background:#F7F9FC;padding:0 14px;font-family:Rubik,sans-serif;font-size:15.5px;font-weight:500;color:#2A2D30" />
+              </div>
+              <sc-for list="{{ aheadRows }}" as="s" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;gap:13px;background:#fff;border:1px dashed #C3D4E8;border-radius:12px;padding:13px 16px;flex-wrap:wrap">
+                  <div style="flex:none;padding:4px 10px;border-radius:8px;background:{{ s.lvBg }};color:{{ s.lvColor }};font-size:12.5px;font-weight:700">{{ s.lvLabel }}</div>
+                  <div style="flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:3px">
+                    <div style="font-size:16px;font-weight:800;color:#2A2D30">{{ s.title }}</div>
+                    <div style="font-size:14px;font-weight:500;color:#6A6D70;line-height:1.45">{{ s.goal }}</div>
+                  </div>
+                  <x-import dc-props="{{ h36 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="secondary" size="sm" onClick="{{ s.onPick }}" hint-size="130px,36px">קבעי כנושא הבא</x-import>
+                </div>
+              </sc-for>
+              <sc-if value="{{ fp.noResults }}" hint-placeholder-val="{{ false }}">
+                <div style="border:1px dashed #C3D4E8;border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:11px;align-items:flex-start">
+                  <div style="font-size:15.5px;font-weight:500;color:#4A4D50;line-height:1.5">אין נושא כזה במאגר. אפשר לחפש מילה אחרת, או להוסיף את הנושא הזה בעצמך — הוא יישמר במאגר ויהיה זמין גם לתלמידים אחרים.</div>
+                  <x-import dc-props="{{ h44 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="primary" icon="plus" onClick="{{ fp.onAddCustom }}" hint-size="220px,44px">{{ fp.addLabel }}</x-import>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ showLevelList }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;margin-inline:-2px;padding-inline:2px">
+          <sc-for list="{{ levelPills }}" as="p" hint-placeholder-count="4">
+            <x-import dc-props="{{ h44 }}" component-from-global-scope="KunikDesignSystem_63ae72.LevelPill" label="{{ p.label }}" color="{{ p.color }}" selected="{{ p.on }}" onClick="{{ p.onClick }}" style="flex:0 0 auto" hint-size="90px,44px"></x-import>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:22px;font-weight:800">{{ levelTitle }}</div>
+            <div style="font-size:14px;font-weight:500;color:#6A6D70">{{ levelMeta }}</div>
+          </div>
+          <x-import dc-props="{{ h44 }}" component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="secondary" icon="book" href="Teaching Toolkit Proposal.dc.html" hint-size="200px,44px">המערך המלא של המפגש</x-import>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:11px">
+          <sc-for list="{{ sessionRows }}" as="s" hint-placeholder-count="6">
+            <div style="display:flex;align-items:flex-start;gap:15px;background:#fff;border:1px solid #E4EAF1;border-radius:12px;padding:15px 17px;box-shadow:0 2px 8px rgba(15,46,82,.06);flex-wrap:wrap">
+              <div style="flex:none;width:44px;height:44px;border-radius:11px;background:{{ s.bg }};color:{{ s.color }};display:flex;align-items:center;justify-content:center;font-family:Heebo,sans-serif;font-size:19px;font-weight:900">{{ s.n }}</div>
+              <div style="flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:4px">
+                <div style="font-size:17px;font-weight:800">{{ s.title }}</div>
+                <div style="font-size:14.5px;font-weight:500;color:#6A6D70;line-height:1.45">{{ s.goal }}</div>
+              </div>
+              <div style="flex:none;display:flex;align-items:center;gap:7px">
+                <sc-if value="{{ s.isCurrent }}" hint-placeholder-val="{{ false }}">
+                  <x-import component-from-global-scope="KunikDesignSystem_63ae72.Badge" tone="blue" hint-size="120px,26px">{{ s.currentLabel }}</x-import>
+                </sc-if>
+                <x-import component-from-global-scope="KunikDesignSystem_63ae72.Badge" tone="neutral" hint-size="70px,26px">{{ s.minutes }}</x-import>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isStructure }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:26px;max-width:900px">
+
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:13px;font-weight:800;letter-spacing:1.4px;color:#8D9296">הצעת מבנה</div>
+          <div style="font-size:28px;font-weight:800;line-height:1.2">שתי דלתות, שכבה אחת של נתונים</div>
+          <div style="font-size:16.5px;font-weight:500;color:#4A4D50;line-height:1.55;text-wrap:pretty">האפליקציה מתחלקת לשני אזורים בלבד: אזור אישי לניהול העסק, ואזור למערכי השיעור. מסך הבית הוא הצומת ביניהם, ומראה מיד את הדבר היחיד שדחוף — השיעור הבא.</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:13px">
+          <x-import component-from-global-scope="KunikDesignSystem_63ae72.SectionLabel" accent="#BE0000" hint-size="100%,20px">מה לא עבד</x-import>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ problems }}" as="p" hint-placeholder-count="4">
+              <div style="display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid #E4EAF1;border-radius:12px;padding:14px 16px">
+                <div style="flex:none;width:26px;height:26px;border-radius:50%;background:#FBEAEC;color:#BE0000;display:flex;align-items:center;justify-content:center">
+                  <x-import component-from-global-scope="KunikDesignSystem_63ae72.Icon" name="close" size="14" hint-size="14px,14px"></x-import>
+                </div>
+                <div style="flex:1;min-width:0;font-size:15.5px;font-weight:500;color:#2A2D30;line-height:1.5">{{ p.text }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:13px">
+          <x-import component-from-global-scope="KunikDesignSystem_63ae72.SectionLabel" accent="#006EE5" hint-size="100%,20px">המבנה החדש</x-import>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px">
+            <sc-for list="{{ layers }}" as="l" hint-placeholder-count="3">
+              <div style="background:#fff;border:1px solid #E4EAF1;border-radius:14px;padding:18px 20px;box-shadow:0 2px 8px rgba(15,46,82,.06);display:flex;flex-direction:column;gap:11px">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div style="width:34px;height:34px;border-radius:9px;background:{{ l.bg }};color:{{ l.fg }};display:flex;align-items:center;justify-content:center">
+                    <x-import component-from-global-scope="KunikDesignSystem_63ae72.Icon" name="{{ l.icon }}" size="18" hint-size="18px,18px"></x-import>
+                  </div>
+                  <div style="font-size:16.5px;font-weight:800">{{ l.title }}</div>
+                </div>
+                <div style="font-size:14.5px;font-weight:500;color:#6A6D70;line-height:1.5">{{ l.text }}</div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <sc-for list="{{ l.items }}" as="i" hint-placeholder-count="4">
+                    <div style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#2A2D30">
+                      <div style="width:5px;height:5px;border-radius:50%;background:{{ l.fg }};flex:none"></div>
+                      {{ i.text }}
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:13px">
+          <x-import component-from-global-scope="KunikDesignSystem_63ae72.SectionLabel" accent="#00A563" hint-size="100%,20px">השינוי המרכזי — סדרה מול מפגש</x-import>
+          <div style="font-size:16px;font-weight:500;color:#2A2D30;line-height:1.6;text-wrap:pretty">היום כל שיעור נקבע בנפרד, ולכן לו״ז קבוע דורש הזנה חדשה כל שבוע. במבנה החדש יש שני דברים שונים: <strong>סדרה</strong> היא הכלל (״רותי, כל יום ראשון ב-10:00״), ו<strong>מפגש</strong> הוא המופע בפועל. הכלל נשמר פעם אחת, והמפגשים נוצרים ממנו.</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px">
+            <sc-for list="{{ modelCards }}" as="m" hint-placeholder-count="4">
+              <div style="background:#fff;border:1px solid #E4EAF1;border-radius:14px;padding:17px 19px;display:flex;flex-direction:column;gap:8px">
+                <div style="font-size:13px;font-weight:800;letter-spacing:1.1px;color:{{ m.fg }}">{{ m.label }}</div>
+                <div style="font-size:16px;font-weight:800">{{ m.title }}</div>
+                <div style="font-size:14.5px;font-weight:500;color:#6A6D70;line-height:1.5">{{ m.text }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:13px">
+          <x-import component-from-global-scope="KunikDesignSystem_63ae72.SectionLabel" accent="#0F2E52" hint-size="100%,20px">סנכרון והתראות</x-import>
+          <div style="background:#0F2E52;border-radius:16px;padding:24px;color:#fff;display:flex;flex-direction:column;gap:16px">
+            <div style="font-size:16px;font-weight:600;color:#D7E6F8;line-height:1.55">חשבון ה-Google שלך הוא מקום האמת. אין שרת נפרד ואין מה לתחזק: הטלפון והמחשב קוראים וכותבים לאותו חשבון, ולכן שיעור שנקבע באחד מופיע בשני תוך שניות.</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px">
+              <sc-for list="{{ syncCards }}" as="s" hint-placeholder-count="3">
+                <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:15px 16px;display:flex;flex-direction:column;gap:7px">
+                  <div style="display:flex;align-items:center;gap:9px">
+                    <x-import component-from-global-scope="KunikDesignSystem_63ae72.Icon" name="{{ s.icon }}" size="18" hint-size="18px,18px"></x-import>
+                    <div style="font-size:15px;font-weight:800">{{ s.title }}</div>
+                  </div>
+                  <div style="font-size:13.5px;font-weight:500;color:#C9D9EE;line-height:1.5">{{ s.text }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <x-import component-from-global-scope="KunikDesignSystem_63ae72.Callout" tone="warn" label="התקנה חד-פעמית" hint-size="100%,80px">החיבור ל-Google דורש הרשאה חד-פעמית מהחשבון שלך. זה נעשה פעם אחת מול Claude Code במחשב, ומאז זה עובד לבד. עד שזה מחובר, המסכים כאן עובדים על נתוני דוגמה.</x-import>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:13px">
+          <x-import component-from-global-scope="KunikDesignSystem_63ae72.SectionLabel" accent="#E1631B" hint-size="100%,20px">מה צריך לשנות בקוד</x-import>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <sc-for list="{{ todos }}" as="t" hint-placeholder-count="6">
+              <div style="display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid #E4EAF1;border-radius:12px;padding:13px 16px">
+                <div style="flex:none;font-family:Heebo,sans-serif;font-size:14px;font-weight:900;color:#8D9296;min-width:18px">{{ t.n }}</div>
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+                  <div style="font-size:15.5px;font-weight:700;color:#121213">{{ t.title }}</div>
+                  <div style="font-size:14px;font-weight:500;color:#6A6D70;line-height:1.5">{{ t.text }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;admin&quot;,&quot;plans&quot;,&quot;structure&quot;],&quot;default&quot;:&quot;home&quot;,&quot;tsType&quot;:&quot;'home'|'admin'|'plans'|'structure'&quot;,&quot;section&quot;:&quot;תצוגה&quot;},&quot;reminderMinutes&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:60,&quot;min&quot;:15,&quot;max&quot;:180,&quot;step&quot;:15,&quot;unit&quot;:&quot;דק׳&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;התראות&quot;},&quot;showLeads&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;תצוגה&quot;}}">
+const DAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי'];
+const SHORT = ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳'];
+const TIMES = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '14:00', '15:00', '16:00', '17:00', '17:30', '18:00', '19:00'];
+const LVC = { 1: '#006EE5', 2: '#00A563', 3: '#0F2E52', 4: '#E1631B' };
+const LVBG = { 1: '#EAF2FD', 2: '#EAF7F1', 3: '#EAEEF4', 4: '#FDEEE6' };
+const LVNAME = { 1: 'רמה 1 · סמארטפון', 2: 'רמה 2 · טלפון מתקדם', 3: 'רמה 3 · מחשב', 4: 'רמה 4 · בינה מלאכותית' };
+
+const STUDENTS = [
+  { id: 's1', name: 'רותי לוי', phone: '052-834-2210', level: 1, at: 4, pay: 'מנוי חודשי · ₪480', due: 0, dueMeta: '', paidAmount: 480, series: { type: 'weekly', days: [0], time: '10:00' } },
+  { id: 's2', name: 'יעקב אברמסון', phone: '054-771-9033', level: 2, at: 5, pay: 'לפי שיעור · ₪120', due: 240, dueMeta: 'שני מפגשים · 11.8, 18.8', paidAmount: 360, series: { type: 'weekly', days: [2], time: '12:30' } },
+  { id: 's3', name: 'שרה בן־דוד', phone: '053-902-4417', level: 1, at: 2, pay: 'כרטיסייה · 5 מתוך 8 נותרו', due: 0, dueMeta: '', paidAmount: 960, series: { type: 'twice', days: [0, 3], time: '09:00' } },
+  { id: 's4', name: 'מיכל רוזן', phone: '050-663-1180', level: 3, at: 3, pay: 'מנוי חודשי · ₪520', due: 520, dueMeta: 'מנוי אוגוסט', paidAmount: 0, series: { type: 'weekly', days: [3], time: '16:00' } },
+  { id: 's5', name: 'אריה גולן', phone: '052-118-7742', level: 4, at: 4, pay: 'לפי שיעור · ₪120', due: 0, dueMeta: '', paidAmount: 240, series: { type: 'once', day: 4, time: '11:00', weekOffset: 0 } },
+  { id: 's6', name: 'חנה פרידמן', phone: '054-330-2265', level: 2, at: 3, pay: 'לפי שיעור · ₪120', due: 120, dueMeta: 'מפגש 21.8', paidAmount: 240, series: { type: 'weekly', days: [4], time: '09:30' } }
+];
+
+const STAGES = [
+  { label: 'לפנות', tone: 'neutral', bg: '#F2F5F9', fg: '#6A6D70' },
+  { label: 'נשלחה הצעה', tone: 'blue', bg: '#EAF2FD', fg: '#006EE5' },
+  { label: 'נקבעה פגישה', tone: 'orange', bg: '#FDEEE6', fg: '#B84E14' },
+  { label: 'סגור', tone: 'green', bg: '#EAF7F1', fg: '#00764A' }
+];
+
+const LEADS = [
+  { id: 'l1', name: 'אחוזת בית — רמת השרון', contact: 'אורית, רכזת פנאי · 03-540-1120', nextAction: 'לחזור אליה ב-3.9', stage: 1 },
+  { id: 'l2', name: 'בית בלב — הרצליה', contact: 'דנה שגב, מנהלת · 09-951-4402', nextAction: 'טרם פניתי', stage: 0 },
+  { id: 'l3', name: 'משען — תל אביב', contact: 'יעל כהן · 03-620-9981', nextAction: 'פגישה 7.9 בשעה 11:00', stage: 2 },
+  { id: 'l4', name: 'מרכז יום נופים — כפר סבא', contact: 'טרם אותר איש קשר', nextAction: 'למצוא טלפון', stage: 0 },
+  { id: 'l5', name: 'מועדון ותיקים עמל', contact: 'רינה אלבז · 03-931-7745', nextAction: 'סוכם על סדנה בת 4 מפגשים', stage: 3 }
+];
+
+const SEED_NOTES = {
+  s1: { date: '23.8', text: 'סיימנו שליחת הודעה קולית בוואטסאפ. שיעורי בית: לשלוח הודעה לבת.' },
+  s2: { date: '25.8', text: 'התחלנו זום. לא הצליח להתחבר מהקישור במייל — לשלוח לו קישור ישירות בוואטסאפ.' },
+  s3: { date: '23.8', text: 'הגדלנו את הטקסט בטלפון. התקשתה בלחיצה ארוכה — לחזור על זה בפתיחה.' },
+  s4: { date: '26.8', text: 'עכבר וגרירה. התעייפה אחרי 20 דקות — לקצר את התרגול המודרך.' },
+  s5: { date: '20.8', text: 'ניסחנו מייל ב-ChatGPT. רוצה לנסות שאלות בריאות — להזכיר שזה לא רופא.' },
+  s6: { date: '27.8', text: 'גוגל תמונות: איתור תמונה לפי תאריך. ביקשה לחזור על גיבוי אוטומטי.' }
+};
+
+function iso(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function addDays(d, n) { const x = new Date(d.getTime()); x.setDate(x.getDate() + n); return x; }
+function fmt(d) { return d.getDate() + '.' + (d.getMonth() + 1); }
+
+class Component extends DCLogic {
+  state = {
+    view: null, sub: 'today', wk: 0, level: 1, cur: null, focus: null, at: {}, covered: {}, pick: {}, customs: {}, q: '',
+    formOpen: false, form: { sid: 's1', day: 1, day2: 3, time: '10:00', rep: 'weekly' },
+    overrides: {}, extras: [], extraSeries: [], paid: {}, paused: {}, stages: {}, notes: {},
+    noteOpen: null, noteDraft: '', confirmKey: null, editKey: null, times: {}
+  };
+
+  componentDidMount() {
+    try {
+      const raw = localStorage.getItem('dk_app_v1');
+      if (raw) {
+        const p = JSON.parse(raw);
+        this.setState({ overrides: p.overrides || {}, extras: p.extras || [], extraSeries: p.extraSeries || [], paid: p.paid || {}, paused: p.paused || {}, stages: p.stages || {}, notes: p.notes || {}, at: p.at || {}, covered: p.covered || {}, pick: p.pick || {}, customs: p.customs || {}, times: p.times || {} });
+      }
+    } catch (e) { /* first run */ }
+    fetch('export/curriculum.json').then(r => r.json()).then(cur => this.setState({ cur })).catch(() => {});
+  }
+
+  save(patch) {
+    const next = { ...this.pick(), ...patch };
+    try { localStorage.setItem('dk_app_v1', JSON.stringify(next)); } catch (e) { /* ignore */ }
+    this.setState(patch);
+  }
+  pick() {
+    const s = this.state;
+    return { overrides: s.overrides, extras: s.extras, extraSeries: s.extraSeries, paid: s.paid, paused: s.paused, stages: s.stages, notes: s.notes, at: s.at, covered: s.covered, pick: s.pick, customs: s.customs, times: s.times };
+  }
+
+  atOf(s) { return (this.state.at || {})[s.id] || s.at; }
+
+  baseSunday() {
+    const t = new Date();
+    const b = t.getDay() === 6 ? addDays(t, 1) : t;
+    return addDays(b, -b.getDay());
+  }
+  weekStart() { return addDays(this.baseSunday(), this.state.wk * 7); }
+
+  allSeries() {
+    const own = STUDENTS.map(s => ({ id: s.id, name: s.name, phone: s.phone, level: s.level, at: s.at, series: s.series }));
+    return own.concat(this.state.extraSeries);
+  }
+
+  occurrences(weekStart) {
+    const out = [];
+    const push = (s, dayIdx, time, kind) => {
+      const d = addDays(weekStart, dayIdx);
+      const key = s.id + '@' + iso(d);
+      out.push({ sid: s.id, name: s.name, phone: s.phone, level: s.level, at: this.atOf(s), date: d, dayIdx, time, kind, key });
+    };
+    this.allSeries().forEach(s => {
+      const se = s.series;
+      if (se.type === 'once') {
+        const target = addDays(this.baseSunday(), (se.weekOffset || 0) * 7 + se.day);
+        if (iso(target) >= iso(weekStart) && iso(target) <= iso(addDays(weekStart, 5))) push(s, se.day, se.time, 'once');
+      } else {
+        (se.days || []).forEach(d => push(s, d, se.time, se.type));
+      }
+    });
+    this.state.extras.forEach(x => {
+      const d = new Date(x.date + 'T00:00:00');
+      if (iso(d) >= iso(weekStart) && iso(d) <= iso(addDays(weekStart, 5))) {
+        out.push({ sid: x.sid, name: x.name, phone: x.phone, level: x.level, at: x.at, date: d, dayIdx: d.getDay(), time: x.time, kind: 'once', key: x.sid + '@' + x.date });
+      }
+    });
+    const moved = [];
+    out.forEach(o => {
+      const tov = (this.state.times || {})[o.key];
+      if (tov) o.time = tov;
+      const ov = this.state.overrides[o.key];
+      o.status = 'active';
+      const pause = this.state.paused[o.sid];
+      if (pause && iso(o.date) >= pause.from && (!pause.to || iso(o.date) <= pause.to)) o.status = 'paused';
+      if (ov === 'cancelled') o.status = 'cancelled';
+      if (ov === 'postponed' || (ov && ov.moved)) {
+        const nd = ov === 'postponed' ? addDays(o.date, 7) : new Date(ov.moved + 'T00:00:00');
+        const inWeek = iso(nd) >= iso(weekStart) && iso(nd) <= iso(addDays(weekStart, 5));
+        o.status = inWeek ? 'hidden' : 'postponed';
+        if (inWeek) moved.push({ ...o, date: nd, dayIdx: nd.getDay(), status: 'active', kind: 'moved', key: o.key + '#m' });
+      }
+    });
+    return out.concat(moved).sort((a, b) => (iso(a.date) + a.time).localeCompare(iso(b.date) + b.time));
+  }
+
+  wa(phone, text) { return 'https://wa.me/972' + phone.replace(/[^0-9]/g, '').slice(1) + '?text=' + encodeURIComponent(text); }
+
+  kindLabel(k) { return k === 'once' ? 'חד פעמי' : k === 'moved' ? 'נדחה לכאן' : k === 'twice' ? 'קבוע · פעמיים בשבוע' : 'קבוע · שבועי'; }
+
+  levelSessions(lv) {
+    const cur = this.state.cur;
+    if (!cur) return [];
+    const l = cur.levels.find(x => x.level === lv);
+    return l ? l.sessions : [];
+  }
+  levelCount(lv) { return this.levelSessions(lv).length; }
+
+  allTopics() {
+    const cur = this.state.cur;
+    const out = [];
+    const cs = this.state.customs || {};
+    Object.keys(cs).forEach(k => out.push({ key: k, lv: 0, n: '+', title: cs[k].title, goal: cs[k].goal || 'נושא שהוספת לפי צורך' }));
+    if (cur) cur.levels.forEach(l => (l.sessions || []).forEach(s => out.push({ key: l.level + '.' + s.n, lv: l.level, n: s.n, title: s.title, goal: s.goal })));
+    return out;
+  }
+
+  renderVals() {
+    const st = this.state;
+    const view = st.view || (this.props.startView ?? 'home');
+    const remind = Math.max(15, Math.min(180, this.props.reminderMinutes ?? 60));
+    const showLeads = this.props.showLeads ?? true;
+    const ws = this.weekStart();
+    const occ = this.occurrences(ws);
+    const active = occ.filter(o => o.status === 'active');
+    const todayISO = iso(new Date());
+
+    const navDefs = [['home', 'בית'], ['admin', 'האזור האישי'], ['plans', 'מערכי שיעור']];
+    const navTabs = navDefs.map(([id, label]) => ({
+      label, onClick: () => this.setState({ view: id }),
+      bg: view === id ? '#F4F7FB' : 'rgba(255,255,255,.08)',
+      fg: view === id ? '#0F2E52' : '#C9DEF7'
+    }));
+
+    const subDefs = [['today', 'היום'], ['week', 'לו״ז'], ['students', 'תלמידים'], ['pay', 'תשלומים']];
+    if (showLeads) subDefs.push(['leads', 'לידים']);
+    const subTabs = subDefs.map(([id, label]) => ({ label, on: st.sub === id, onClick: () => this.setState({ sub: id }) }));
+
+    const upcoming = this.occurrences(this.baseSunday()).filter(o => o.status === 'active' && iso(o.date) >= todayISO);
+    const nx = upcoming[0] || active[0] || null;
+    const next = nx ? {
+      name: nx.name, at: nx.at, levelName: LVNAME[nx.level],
+      when: 'יום ' + DAYS[nx.dayIdx] + ' ' + fmt(nx.date) + ' בשעה ' + nx.time,
+      kindLabel: this.kindLabel(nx.kind),
+      noteLine: (st.notes[nx.sid] || SEED_NOTES[nx.sid]) ? 'בפעם הקודמת (' + (st.notes[nx.sid] || SEED_NOTES[nx.sid]).date + '): ' + (st.notes[nx.sid] || SEED_NOTES[nx.sid]).text : 'אין סיכום מהמפגש הקודם.',
+      waHref: this.wa(nx.phone, 'שלום ' + nx.name + ', נתראה ביום ' + DAYS[nx.dayIdx] + ' בשעה ' + nx.time + '.')
+    } : { name: 'אין שיעור קרוב', at: '—', levelName: '—', when: 'הלו״ז ריק', kindLabel: '', noteLine: '', waHref: '#' };
+
+    const dayISO = nx ? iso(nx.date) : todayISO;
+    const todayAll = upcoming.filter(o => iso(o.date) === dayISO);
+    const todayRest = todayAll.filter(o => !nx || o.key !== nx.key).map(o => ({
+      time: o.time, name: o.name, levelName: LVNAME[o.level].split(' · ')[1],
+      kindLabel: this.kindLabel(o.kind),
+      waHref: this.wa(o.phone, 'שלום ' + o.name + ', נתראה היום בשעה ' + o.time + '.'),
+      onPlan: () => { const s = STUDENTS.find(x => x.id === o.sid); this.setState({ view: 'plans', focus: o.sid, level: s ? s.level : st.level }); }
+    }));
+    const whenWord = dayISO === todayISO ? 'היום' : nx ? 'ביום ' + DAYS[nx.dayIdx] : '';
+    const todayRestLabel = todayRest.length === 0
+      ? 'זה השיעור היחיד ' + whenWord
+      : (todayRest.length === 1 ? 'עוד שיעור אחד ' : 'עוד ' + todayRest.length + ' שיעורים ') + whenWord;
+    const todayEmptyText = 'אפשר לקבוע עוד מפגש ' + whenWord + ' מתוך הלו״ז השבועי.';
+
+    const dayList = idx => occ.filter(o => o.dayIdx === idx);
+    let shownDay = 0;
+    if (st.wk === 0) {
+      const nowDay = new Date().getDay();
+      const from = nowDay === 6 ? 0 : nowDay;
+      let pick = -1;
+      for (let i = from; i <= 5; i++) { if (occ.some(o => o.dayIdx === i && o.status === 'active')) { pick = i; break; } }
+      shownDay = pick >= 0 ? pick : from;
+    } else {
+      const first = occ.find(o => o.status === 'active');
+      shownDay = first ? first.dayIdx : 0;
+    }
+    const lastNote = sid => st.notes[sid] || SEED_NOTES[sid] || null;
+    const noteLine = sid => {
+      const n = lastNote(sid);
+      return n ? 'בפעם הקודמת (' + n.date + '): ' + n.text : 'אין עדיין סיכום — כתבי אחד בסוף המפגש.';
+    };
+
+    const todayList = dayList(shownDay).filter(o => o.status !== 'hidden').map(o => ({
+      name: o.name, time: o.time, dayShort: SHORT[o.dayIdx],
+      noteLine: noteLine(o.sid),
+      noteOpen: st.noteOpen === o.sid,
+      noteBtnLabel: st.noteOpen === o.sid ? 'סגרי' : 'סיכום המפגש',
+      onNote: () => {
+        const n = lastNote(o.sid);
+        this.setState({ noteOpen: st.noteOpen === o.sid ? null : o.sid, noteDraft: st.notes[o.sid] ? st.notes[o.sid].text : (n ? '' : '') });
+      },
+      onSaveNote: () => {
+        const t = new Date();
+        this.save({ notes: { ...st.notes, [o.sid]: { date: fmt(t), text: st.noteDraft } } });
+        this.setState({ noteOpen: null, noteDraft: '' });
+      },
+      meta: LVNAME[o.level] + ' · מפגש ' + o.at + ' · ' + this.kindLabel(o.kind),
+      color: o.status === 'active' ? LVC[o.level] : '#8D9296',
+      strike: o.status === 'active' ? 'none' : 'line-through',
+      badgeTone: o.status === 'active' ? 'green' : o.status === 'paused' ? 'neutral' : 'red',
+      badgeLabel: o.status === 'active' ? 'מאושר' : o.status === 'paused' ? 'מושהה' : o.status === 'postponed' ? 'נדחה' : 'בוטל',
+      waHref: this.wa(o.phone, 'שלום ' + o.name + ', נתראה היום בשעה ' + o.time + '.')
+    }));
+
+    const unpaidList = STUDENTS.filter(s => s.due > 0 && !st.paid[s.id]);
+    const dueTotal = unpaidList.reduce((a, s) => a + s.due, 0);
+    const paidTotal = STUDENTS.reduce((a, s) => a + s.paidAmount + (st.paid[s.id] ? s.due : 0), 0);
+
+    const alerts = unpaidList.map(s => ({
+      icon: 'trending-up', bg: '#FBEAEC', fg: '#BE0000',
+      title: s.name + ' — \u2066₪' + s.due + '\u2069 לא שולם', meta: s.dueMeta || s.pay,
+      action: 'לתשלומים', onClick: () => this.setState({ view: 'admin', sub: 'pay' })
+    }));
+    LEADS.forEach(l => {
+      const stage = st.stages[l.id] ?? l.stage;
+      if (stage === 2) alerts.push({ icon: 'calendar', bg: '#FDEEE6', fg: '#B84E14', title: l.name, meta: l.nextAction, action: 'ללידים', onClick: () => this.setState({ view: 'admin', sub: 'leads' }) });
+    });
+
+    const moveTo = (key, dayIdx) => {
+      const base = key.replace('#m', '');
+      const target = iso(addDays(ws, dayIdx));
+      const n = { ...st.overrides };
+      if (base.split('@')[1] === target) delete n[base];
+      else n[base] = { moved: target };
+      this.save({ overrides: n });
+      this.setState({ dragOver: null, dragKey: null });
+    };
+
+    const weekDaysList = DAYS.map((label, i) => {
+      const d = addDays(ws, i);
+      const items = dayList(i).filter(o => o.status !== 'hidden').map(o => ({
+        name: o.name, time: o.time, levelName: LVNAME[o.level],
+        kindLabel: this.kindLabel(o.kind),
+        color: o.status === 'active' ? LVC[o.level] : '#8D9296',
+        cardBg: o.status === 'active' ? '#fff' : '#F7F9FC',
+        nameFg: o.status === 'active' ? '#121213' : '#8D9296',
+        strike: o.status === 'active' ? 'none' : 'line-through',
+        isActive: o.status === 'active', isCancelled: o.status !== 'active',
+        badgeTone: o.status === 'paused' ? 'neutral' : 'red',
+        badgeLabel: o.status === 'paused' ? 'מושהה' : o.status === 'postponed' ? 'נדחה בשבוע' : 'בוטל',
+        isConfirming: st.confirmKey === o.key, notConfirming: st.confirmKey !== o.key,
+        showTrash: st.confirmKey !== o.key && st.editKey !== o.key && o.status === 'active',
+        isEditing: st.editKey === o.key,
+        timeValue: o.time, timeOptions: TIMES,
+        onAskEdit: () => this.setState({ editKey: o.key, confirmKey: null }),
+        onTimeChange: e => { this.setState({ editKey: null }); this.save({ times: { ...(st.times || {}), [o.key]: e.target.value } }); },
+        onEditClose: () => this.setState({ editKey: null }),
+        onAskCancel: () => this.setState({ confirmKey: o.key }),
+        onDismiss: () => this.setState({ confirmKey: null }),
+        onCancel: () => { this.setState({ confirmKey: null }); this.save({ overrides: { ...st.overrides, [o.key]: 'cancelled' } }); },
+        onPostpone: () => this.save({ overrides: { ...st.overrides, [o.key]: 'postponed' } }),
+        onUndo: () => { const n = { ...st.overrides }; delete n[o.key.replace('#m', '')]; this.save({ overrides: n }); },
+        isMoved: o.kind === 'moved',
+        draggable: o.status === 'active',
+        cursor: o.status === 'active' ? 'grab' : 'default',
+        dragging: st.dragKey === o.key,
+        onDragStart: e => { if (e.dataTransfer) { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', o.key); } this.setState({ dragKey: o.key }); },
+        onDragEnd: () => this.setState({ dragKey: null, dragOver: null })
+      }));
+      const isToday = iso(d) === todayISO;
+      const over = st.dragOver === i && st.dragKey;
+      return {
+        label: SHORT[i] + ' · ' + DAYS[i], date: fmt(d), items, empty: items.length === 0,
+        headBg: isToday ? '#0F2E52' : '#F7F9FC',
+        headFg: isToday ? '#fff' : '#0F2E52',
+        headMeta: isToday ? '#9CC7F5' : '#8D9296',
+        border: over ? '2px solid #006EE5' : '1px solid #E4EAF1',
+        colBg: over ? '#EAF2FD' : '#fff',
+        onDragOver: e => { e.preventDefault(); if (st.dragOver !== i) this.setState({ dragOver: i }); },
+        onDragLeave: () => { if (st.dragOver === i) this.setState({ dragOver: null }); },
+        onDrop: e => {
+          e.preventDefault();
+          const key = (e.dataTransfer && e.dataTransfer.getData('text/plain')) || st.dragKey;
+          if (key) moveTo(key, i);
+        }
+      };
+    });
+
+    const weekSummary = DAYS.map((label, i) => {
+      const items = dayList(i).filter(o => o.status === 'active');
+      const isToday = iso(addDays(ws, i)) === todayISO;
+      return {
+        label: SHORT[i] + ' ' + fmt(addDays(ws, i)),
+        count: items.length === 0 ? 'פנוי' : items.length === 1 ? 'מפגש אחד' : items.length + ' מפגשים',
+        labelFg: isToday ? '#006EE5' : '#0F2E52',
+        hasItems: items.length > 0,
+        items: items.map(o => ({ time: o.time, name: o.name, color: LVC[o.level] }))
+      };
+    });
+
+    const studentRows = STUDENTS.map(s => {
+      const count = this.levelCount(s.level) || 8;
+      const pause = st.paused[s.id];
+      const se = s.series;
+      const sched = se.type === 'once'
+        ? 'חד פעמי · יום ' + DAYS[se.day] + ' ' + se.time
+        : (se.days || []).map(d => SHORT[d]).join(' + ') + ' · ' + se.time + (se.type === 'twice' ? ' · פעמיים בשבוע' : ' · כל שבוע');
+      const due = s.due > 0 && !st.paid[s.id];
+      return {
+        name: s.name, phone: s.phone, initial: s.name.slice(0, 1),
+        color: LVC[s.level], bg: LVBG[s.level], levelName: LVNAME[s.level],
+        pct: Math.min(100, Math.round((s.at / count) * 100)) + '%',
+        progress: 'מפגש ' + s.at + ' מתוך ' + count,
+        scheduleLabel: sched, payLabel: s.pay, noteLine: noteLine(s.id),
+        badgeTone: due ? 'red' : 'green', badgeLabel: due ? 'חוב \u2066₪' + s.due + '\u2069' : 'מסודר',
+        pauseLabel: pause ? 'שחררי מהשהיה' : 'השהי',
+        pauseVariant: pause ? 'primary' : 'quiet',
+        pauseNote: pause ? 'מושהה מ-' + fmt(new Date(pause.from + 'T00:00:00')) + ' עד שתשוחרר' : '',
+        isPaused: !!pause,
+        onPause: () => {
+          const n = { ...st.paused };
+          if (pause) delete n[s.id];
+          else n[s.id] = { from: iso(new Date()), to: null };
+          this.save({ paused: n });
+        },
+        waHref: this.wa(s.phone, 'שלום ' + s.name + ',')
+      };
+    });
+
+    const unpaidRows = unpaidList.map(s => ({
+      name: s.name, meta: (s.dueMeta || s.pay) + ' · ' + s.pay, amount: '₪' + s.due,
+      waHref: this.wa(s.phone, 'שלום ' + s.name + ', רק תזכורת קטנה על התשלום. תודה!'),
+      onPaid: () => this.save({ paid: { ...st.paid, [s.id]: true } })
+    }));
+    const paidRows = STUDENTS.filter(s => s.due === 0 || st.paid[s.id]).map(s => ({
+      name: s.name, meta: s.pay, amount: '₪' + (st.paid[s.id] ? s.due : s.paidAmount)
+    }));
+
+    const leadRows = LEADS.map(l => {
+      const stage = st.stages[l.id] ?? l.stage;
+      const sg = STAGES[stage];
+      return {
+        name: l.name, contact: l.contact, nextAction: l.nextAction,
+        tone: sg.tone, stageLabel: sg.label, bg: sg.bg, fg: sg.fg,
+        advanceLabel: stage >= 3 ? 'החזירי שלב' : 'קדמי שלב',
+        onAdvance: () => this.save({ stages: { ...st.stages, [l.id]: stage >= 3 ? 0 : stage + 1 } })
+      };
+    });
+    const openLeads = LEADS.filter(l => (st.stages[l.id] ?? l.stage) < 3).length;
+
+    const f = st.form;
+    const repDefs = [['once', 'חד פעמי'], ['weekly', 'כל שבוע'], ['twice', 'פעמיים בשבוע']];
+    const repOptions = repDefs.map(([id, label]) => ({ label, on: f.rep === id, onClick: () => this.setState({ form: { ...f, rep: id } }) }));
+    const dayOptions = DAYS.map(d => 'יום ' + d);
+    const timeOptions = ['08:30', '09:00', '09:30', '10:00', '11:00', '12:30', '14:00', '16:00', '17:30'];
+    const studentOptions = STUDENTS.map(s => s.name);
+    const formStudent = STUDENTS.find(s => s.id === f.sid) || STUDENTS[0];
+    const firstDate = addDays(this.baseSunday(), Number(f.day) < new Date().getDay() ? 7 + Number(f.day) : Number(f.day));
+    let formPreview;
+    if (f.rep === 'once') {
+      formPreview = 'מפגש אחד: ' + formStudent.name + ', יום ' + DAYS[f.day] + ' ' + fmt(firstDate) + ' בשעה ' + f.time + '.';
+    } else if (f.rep === 'weekly') {
+      formPreview = 'קביעה חוזרת: ' + formStudent.name + ', כל יום ' + DAYS[f.day] + ' ב-' + f.time + '. המפגשים הראשונים — ' + [0, 1, 2, 3].map(i => fmt(addDays(firstDate, i * 7))).join(', ') + '…';
+    } else {
+      formPreview = 'קביעה חוזרת פעמיים בשבוע: ' + formStudent.name + ', יום ' + DAYS[f.day] + ' ויום ' + DAYS[f.day2] + ' ב-' + f.time + '.';
+    }
+
+    const focusStudentPre = STUDENTS.find(s => s.id === st.focus) || null;
+    const focusStudent = focusStudentPre;
+    const planLevel = focusStudent ? focusStudent.level : st.level;
+    const mins = (this.state.cur ? this.state.cur.lessonMinutes : 45) + ' דק׳';
+
+    const lvSessions = this.levelSessions(planLevel);
+    const sessionRows = lvSessions.map(s => {
+      const cur = STUDENTS.filter(x => x.level === planLevel && this.atOf(x) === s.n);
+      return {
+        n: s.n, title: s.title, goal: s.goal, color: LVC[planLevel], bg: LVBG[planLevel],
+        minutes: mins,
+        isCurrent: cur.length > 0,
+        currentLabel: cur.length ? 'כאן: ' + cur.map(x => x.name.split(' ')[0]).join(', ') : ''
+      };
+    });
+
+    const studentChips = STUDENTS.slice().sort((a, b) => a.name.localeCompare(b.name, 'he')).map(s => ({
+      id: s.id,
+      optLabel: s.name + ' · ' + LVNAME[s.level].split(' · ')[1]
+    }));
+    const covN = focusStudentPre ? ((((st.covered || {})[focusStudentPre.id]) || []).length || 0) : 0;
+    const planPickMeta = focusStudentPre
+      ? (covN === 1 ? 'נושא אחד כבר נעשה' : covN + ' נושאים כבר נעשו')
+      : STUDENTS.length + ' תלמידים';
+
+    let fp = null, aheadRows = [], coveredChips = [];
+    if (focusStudent) {
+      const sid = focusStudent.id;
+      const cov = (st.covered || {})[sid] || [];
+      const all = this.allTopics();
+      const pickKey = (st.pick || {})[sid];
+      const cs = all.find(t => t.key === pickKey)
+        || all.filter(t => t.lv === focusStudent.level && cov.indexOf(t.key) < 0)[0]
+        || all[0] || { key: '', lv: focusStudent.level, n: 1, title: '', goal: '' };
+      const q = (st.q || '').trim();
+      const ql = q.toLowerCase();
+      aheadRows = all.filter(t => t.key !== cs.key && cov.indexOf(t.key) < 0)
+        .filter(t => !ql || (t.title + ' ' + t.goal).toLowerCase().indexOf(ql) > -1)
+        .slice(0, q ? 12 : 6)
+        .map(t => ({
+          n: String(t.n), title: t.title, goal: t.goal,
+          lvLabel: t.lv ? LVNAME[t.lv].split(' · ')[1] : 'נושא שלך', lvColor: LVC[t.lv] || '#0F2E52', lvBg: LVBG[t.lv] || '#EAEEF4',
+          onPick: () => this.save({ pick: { ...(st.pick || {}), [sid]: t.key } })
+        }));
+      coveredChips = cov.map(k => {
+        const t = all.find(x => x.key === k) || { title: k, lv: focusStudent.level };
+        return { title: t.title, color: LVC[t.lv] || '#0F2E52', bg: LVBG[t.lv] || '#EAEEF4', onRemove: () => this.save({ covered: { ...(st.covered || {}), [sid]: cov.filter(x => x !== k) } }) };
+      });
+      const note = st.notes[sid];
+      const lastT = cov.length ? (all.find(x => x.key === cov[cov.length - 1]) || null) : null;
+      fp = {
+        n: String(cs.n), title: cs.title, goal: cs.goal,
+        color: LVC[cs.lv] || '#0F2E52', bg: LVBG[cs.lv] || '#EAEEF4',
+        who: focusStudent.name + ' · ' + LVNAME[focusStudent.level],
+        position: pickKey ? 'נבחר לפי צורך' : 'ההמשך הטבעי', minutes: mins,
+        hasLast: !!(note || lastT),
+        lastText: note ? 'מהמפגש הקודם: ' + note : lastT ? 'הנושא האחרון שעשיתם: ' + lastT.title + '.' : '',
+        coveredLabel: cov.length ? 'מה כבר עשיתם — ' + cov.length + (cov.length === 1 ? ' נושא' : ' נושאים') : 'עוד לא סומן שום נושא',
+        aheadLabel: q ? 'תוצאות חיפוש' : 'נושאים שעוד לא עשיתם',
+        searchValue: st.q || '',
+        onSearch: e => this.setState({ q: e.target.value }),
+        hasQuery: !!q, noResults: aheadRows.length === 0,
+        addLabel: q ? 'הוסיפי ״' + q + '״ כנושא הבא' : 'הוסיפי נושא משלך',
+        onAddCustom: () => {
+          const title = (st.q || '').trim();
+          if (!title) return;
+          const key = 'c' + Date.now();
+          this.save({ customs: { ...(st.customs || {}), [key]: { title } }, pick: { ...(st.pick || {}), [sid]: key } });
+          this.setState({ q: '' });
+        },
+        doneLabel: 'סמני שהנושא נעשה',
+        onDone: () => this.save({
+          covered: { ...(st.covered || {}), [sid]: cov.concat(cov.indexOf(cs.key) < 0 ? [cs.key] : []) },
+          pick: { ...(st.pick || {}), [sid]: null }
+        })
+      };
+    }
+    const levelPills = [1, 2, 3, 4].map(lv => ({
+      label: 'רמה ' + lv, color: LVC[lv], on: planLevel === lv, onClick: () => this.setState({ level: lv, focus: null })
+    }));
+
+    return {
+      badge44: { style: { height: 44, boxSizing: 'border-box', display: 'inline-flex', alignItems: 'center', whiteSpace: 'nowrap' } },
+      h44: { style: { height: 44, boxSizing: 'border-box', whiteSpace: 'nowrap' } },
+      h36: { style: { height: 36, width: undefined, boxSizing: 'border-box', whiteSpace: 'nowrap' } },
+      waFab: { style: { height: 44, width: 44, boxSizing: 'border-box', background: '#25D366', color: '#0A2E17' } },
+      navyFab: { style: { height: 44, width: 44, boxSizing: 'border-box', background: 'rgba(255,255,255,.08)', border: '1px solid rgba(255,255,255,.22)', color: '#fff' } },
+      navTabs, subTabs,
+      notHome: view !== 'home', goHome: () => this.setState({ view: 'home' }),
+      isHome: view === 'home', isAdmin: view === 'admin', isPlans: view === 'plans', isStructure: view === 'structure',
+      subToday: st.sub === 'today', subWeek: st.sub === 'week', subStudents: st.sub === 'students', subPay: st.sub === 'pay', subLeads: st.sub === 'leads',
+      reminderLabel: remind === 60 ? 'שעה' : remind + ' דקות',
+      syncSub: 'עודכן לפני 4 דקות',
+      allBg: focusStudent ? '#fff' : '#0F2E52', allFg: focusStudent ? '#2A2D30' : '#fff',
+      allBorder: focusStudent ? '1px solid #E4EAF1' : '1px solid #0F2E52',
+      todayRest, todayRestLabel, todayEmptyText, hasTodayRest: !!nx, todayIsEmpty: todayRest.length === 0,
+      studentChips, coveredChips, planPickMeta, planPick: st.focus || '__all',
+      onPlanPick: e => { const v = e.target.value; const s = STUDENTS.find(x => x.id === v); this.setState(s ? { focus: s.id, level: s.level } : { focus: null }); },
+      hasFocus: !!focusStudent, showLevelList: !focusStudent, fp, aheadRows,
+      clearFocus: () => this.setState({ focus: null }),
+      next, openPlans: () => this.setState({ view: 'plans', focus: nx ? nx.sid : null, level: nx ? nx.level : st.level }), openAdmin: () => this.setState({ view: 'admin', sub: 'today' }),
+      openWeek: () => this.setState({ view: 'admin', sub: 'week' }), openStructure: () => this.setState({ view: 'structure' }),
+      homeAdminCount: 'לו״ז · תלמידים · תשלומים · לידים',
+      homePlansCount: '4 רמות · ' + (this.state.cur ? this.state.cur.levels.reduce((a, l) => a + l.sessions.length, 0) : 25) + ' מפגשים',
+      statWeek: String(active.length), statWeekSub: 'שבוע ' + fmt(ws) + '–' + fmt(addDays(ws, 5)),
+      statStudents: String(STUDENTS.length), statStudentsSub: 'בארבע רמות',
+      statDue: '₪' + dueTotal, statDueSub: unpaidList.length + ' תלמידים',
+      statLeads: String(openLeads), statLeadsSub: 'דיור מוגן ומרכזי יום',
+      statPaid: '₪' + paidTotal, statForecast: '₪2,840',
+      todayHeading: 'יום ' + DAYS[shownDay] + ' · ' + fmt(addDays(ws, shownDay)),
+      todayList, hasToday: todayList.length > 0, noToday: todayList.length === 0,
+      noteDraft: st.noteDraft,
+      setNoteDraft: e => this.setState({ noteDraft: e.target.value }),
+      alerts, weekSummary, weekDaysList,
+      weekLabel: 'שבוע ' + fmt(ws) + ' – ' + fmt(addDays(ws, 5)),
+      prevWeek: () => this.setState({ wk: st.wk - 1 }), nextWeek: () => this.setState({ wk: st.wk + 1 }), thisWeek: () => this.setState({ wk: 0 }),
+      formOpen: st.formOpen, formToggleLabel: st.formOpen ? 'סגרי' : 'מפגש חדש',
+      toggleForm: () => this.setState({ formOpen: !st.formOpen }),
+      repOptions, dayOptions, timeOptions, studentOptions, form: f,
+      dayLabel: f.rep === 'twice' ? 'יום ראשון בשבוע' : 'יום',
+      isTwice: f.rep === 'twice',
+      formSidValue: formStudent.name,
+      formDayValue: 'יום ' + DAYS[f.day],
+      formDay2Value: 'יום ' + DAYS[f.day2],
+      setSid: e => { const s = STUDENTS.find(x => x.name === e.target.value); if (s) this.setState({ form: { ...f, sid: s.id } }); },
+      setDay: e => this.setState({ form: { ...f, day: Math.max(0, DAYS.indexOf(e.target.value.replace('יום ', ''))) } }),
+      setDay2: e => this.setState({ form: { ...f, day2: Math.max(0, DAYS.indexOf(e.target.value.replace('יום ', ''))) } }),
+      setTime: e => this.setState({ form: { ...f, time: e.target.value } }),
+      formPreview,
+      saveLesson: () => {
+        const s = formStudent;
+        if (f.rep === 'once') {
+          this.save({ extras: st.extras.concat([{ sid: s.id, name: s.name, phone: s.phone, level: s.level, at: s.at, date: iso(firstDate), time: f.time }]) });
+        } else {
+          const days = f.rep === 'twice' ? [Number(f.day), Number(f.day2)] : [Number(f.day)];
+          this.save({ extraSeries: st.extraSeries.concat([{ id: s.id + '-x' + st.extraSeries.length, name: s.name, phone: s.phone, level: s.level, at: s.at, series: { type: f.rep, days, time: f.time } }]) });
+        }
+        this.setState({ formOpen: false });
+      },
+      studentRows, studentsHeading: STUDENTS.length + ' תלמידים פעילים',
+      unpaidRows, paidRows, hasUnpaid: unpaidRows.length > 0, noUnpaid: unpaidRows.length === 0,
+      leadRows,
+      levelPills, sessionRows,
+      levelTitle: LVNAME[st.level], levelMeta: (this.levelCount(st.level) || '—') + ' מפגשים · ' + (this.state.cur ? this.state.cur.lessonMinutes : 45) + ' דקות כל אחד',
+      problems: [
+        { text: 'הנתונים ישבו בשלושה מקומות שלא דיברו ביניהם — תלמידים בכלי אחד, לו״ז בשני, מערכי שיעור בשלישי.' },
+        { text: 'כל שיעור נקבע בנפרד, גם כשהוא חוזר כל שבוע באותה שעה. זו הזנה חדשה כל שבוע לכל תלמיד/ה.' },
+        { text: 'אין תשובה מהירה לשאלה ״מה עלי לעשות עכשיו״ — צריך לחפש אותה בין מסכים.' },
+        { text: 'מה שנקבע בטלפון לא הופיע במחשב, ולהיפך.' }
+      ],
+      layers: [
+        { icon: 'home', title: 'מסך בית', bg: '#EAEEF4', fg: '#0F2E52', text: 'שתי דלתות, ומעליהן השיעור הבא. אין כאן עוד תוכן.', items: [{ text: 'השיעור הבא' }, { text: 'האזור האישי' }, { text: 'מערכי שיעור' }] },
+        { icon: 'bars', title: 'האזור האישי', bg: '#EAF2FD', fg: '#006EE5', text: 'ניהול העסק. חמש לשוניות, לפי סדר השימוש היומי.', items: [{ text: 'היום — מה קורה עכשיו' }, { text: 'לו״ז — שבוע מלא' }, { text: 'תלמידים' }, { text: 'תשלומים' }, { text: 'לידים' }] },
+        { icon: 'book', title: 'מערכי שיעור', bg: '#EAF7F1', fg: '#00A563', text: 'ארבע רמות, 25 מפגשים, קורא מקובץ אחד — curriculum.json.', items: [{ text: 'רמה ← מפגש ← מערך' }, { text: 'איפה כל תלמיד/ה עוצר' }, { text: 'שיעורי בית לוואטסאפ' }] }
+      ],
+      modelCards: [
+        { label: 'סדרה', fg: '#006EE5', title: 'הכלל', text: 'תלמיד/ה, יום, שעה, וסוג חזרה: חד פעמי, כל שבוע, או פעמיים בשבוע. נשמר פעם אחת.' },
+        { label: 'מפגש', fg: '#00A563', title: 'המופע', text: 'התאריך בפועל. נוצר מהסדרה, ואפשר לגעת בו בלי לשנות את הכלל.' },
+        { label: 'ביטול', fg: '#BE0000', title: 'מפגש אחד בלבד', text: 'המפגש מסומן כמבוטל ונשאר בלו״ז לתיעוד. הסדרה ממשיכה בשבוע הבא.' },
+        { label: 'השהיה', fg: '#E1631B', title: 'תקופה שלמה', text: 'חופש או אשפוז — טווח תאריכים שבו הסדרה לא מייצרת מפגשים, ואחריו היא חוזרת לבד.' }
+      ],
+      syncCards: [
+        { icon: 'calendar', title: 'יומן Google', text: 'כל מפגש הוא אירוע. סדרה נכתבת כאירוע חוזר אחד. התזכורת שעה לפני היא תזכורת של האירוע.' },
+        { icon: 'materials', title: 'גיליון Google', text: 'תלמידים, תשלומים ולידים יושבים בגיליון אחד. אפשר לפתוח אותו גם ידנית.' },
+        { icon: 'bell', title: 'ההתראה', text: 'מגיעה מיומן Google לטלפון, שעה לפני, גם כשהאפליקציה סגורה. אין צורך באפליקציה מותקנת.' }
+      ],
+      todos: [
+        { n: 1, title: 'לפצל את הנתונים לשלוש טבלאות', text: 'תלמידים · סדרות · מפגשים. מפגש מחזיק מפתח לסדרה, ומחזיק סטטוס: מאושר, בוטל, נדחה, מושהה.' },
+        { n: 2, title: 'לחבר את חשבון Google', text: 'הרשאה חד-פעמית ליומן ולגיליון. כתיבה דו-כיוונית, כך שגם שינוי שנעשה ביומן עצמו יחזור לאפליקציה.' },
+        { n: 3, title: 'להגדיר תזכורת אוטומטית', text: 'כל אירוע נוצר עם תזכורת 60 דקות לפני. זה מה שמייצר את ההתראה בטלפון.' },
+        { n: 4, title: 'לאחד מסך בית אחד', text: 'להחליף את הפיצול הקיים בשתי כרטיסיות ובשורת ״השיעור הבא״.' },
+        { n: 5, title: 'להעביר את מערכי השיעור ל-curriculum.json', text: 'קובץ אחד שממנו קוראים כל המסכים, במקום שכפול בשלושה קבצים.' },
+        { n: 6, title: 'שדה תשלום לפי תלמיד/ה', text: 'לפי שיעור, מנוי חודשי, או כרטיסייה. החוב מחושב מהמפגשים שהתקיימו בפועל.' },
+        { n: 7, title: 'סיכום מפגש', text: 'שדה טקסט על המפגש עצמו, לא על התלמיד/ה — כך נשמרת היסטוריה. הסיכום האחרון מוצג במסך הבית ובלשונית ״היום״ לפני המפגש הבא.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

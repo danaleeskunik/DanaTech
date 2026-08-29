@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/tokens/colors.css">
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/tokens/typography.css">
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/tokens/radius.css">
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/tokens/elevation.css">
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/tokens/motion.css">
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/styles.css">
+<script src="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/_ds_bundle.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; direction: rtl; background: #F4F7FB; color: #121213; font-family: Rubik, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #006EE5; }
+  a:hover { color: #0055B2; }
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+  <div style="background:#0F2E52;color:#fff;position:sticky;top:0;z-index:5">
+    <div style="max-width:1040px;margin:0 auto;padding:20px clamp(14px,4vw,24px) 0">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:13px;flex:1 1 auto;min-width:0">
+          <x-import component-from-global-scope="KunikDesignSystem_63ae72.Logo" height="28" hint-size="32px,28px"></x-import>
+          <div style="display:flex;flex-direction:column;gap:3px">
+            <div style="font-size:20px;font-weight:800">מסלול הלימוד — הצעה חדשה</div>
+            <div style="font-size:13.5px;font-weight:500;color:#9CC7F5">טק בגובה העיניים · דנה קוניק</div>
+          </div>
+        </div>
+        <div style="flex:none;white-space:nowrap;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.22);border-radius:100px;padding:8px 14px">
+          <div style="font-family:Heebo,sans-serif;font-size:15px;font-weight:900;color:#fff">{{ totalSessions }}</div>
+          <div style="font-size:13px;font-weight:600;color:#C9DEF7">מפגשים · {{ minutesLabel }} דקות כל אחד</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:18px" hint-placeholder-count="3">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+          <div onClick="{{ t.onClick }}" style="padding:12px 22px;border-radius:10px 10px 0 0;font-size:14.5px;font-weight:800;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }}">{{ t.label }}</div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:1040px;width:100%;margin:0 auto;padding:24px clamp(14px,4vw,24px) 60px;box-sizing:border-box;display:flex;flex-direction:column;gap:22px">
+
+    <sc-if value="{{ isMap }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:22px">
+        <x-import component-from-global-scope="KunikDesignSystem_63ae72.Callout" tone="info" label="מה חדש" hint-size="100%,72px">
+          כל מפגש עומד בפני עצמו במספור רצוף — אין יותר "שיעורים 3–4". המבנה זהה בכל מפגש, האבטחה והנגישות עברו להתחלה, ושיעורי הבית הם אותם שלושה פריטים שנשלחים בוואטסאפ ומודפסים.
+        </x-import>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap" hint-placeholder-count="4">
+          <sc-for list="{{ levelPills }}" as="lv" hint-placeholder-count="4">
+            <x-import component-from-global-scope="KunikDesignSystem_63ae72.LevelPill" label="{{ lv.label }}" color="{{ lv.color }}" selected="{{ lv.selected }}" onClick="{{ lv.onClick }}" dc-props="{{ pillProps }}" hint-size="120px,44px"></x-import>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+            <div style="font-size:19px;font-weight:800;color:#0F2E52">{{ levelName }}</div>
+            <div style="font-size:13.5px;font-weight:600;color:#6A6D70">{{ levelMeta }}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:11px" hint-placeholder-count="6">
+            <sc-for list="{{ sessions }}" as="s" hint-placeholder-count="6">
+              <div onClick="{{ s.onOpen }}" style="display:flex;align-items:center;gap:16px;background:#fff;border:1px solid #E4EAF1;border-radius:14px;box-shadow:0 2px 8px rgba(15,46,82,.06);padding:16px 18px;cursor:pointer">
+                <div style="flex:none;min-width:74px;text-align:center;padding:7px 11px;border-radius:8px;font-size:13px;font-weight:800;background:{{ s.bg }};color:{{ s.color }}">{{ s.badge }}</div>
+                <div style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">
+                  <div style="font-size:16.5px;font-weight:800;color:#121213">{{ s.title }}</div>
+                  <div style="font-size:14px;font-weight:500;color:#6A6D70;text-wrap:pretty">{{ s.goal }}</div>
+                </div>
+                <div style="flex:none;display:flex;align-items:center;gap:10px">
+                  <div style="font-family:Heebo,sans-serif;font-size:13px;font-weight:700;color:#8D9296">{{ s.state }}</div>
+                  <div style="color:#C3D4E8;display:flex">
+                    <x-import component-from-global-scope="KunikDesignSystem_63ae72.Icon" name="chevron-left" size="20" hint-size="20px,20px"></x-import>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isLesson }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div onClick="{{ backToMap }}" style="align-self:flex-start;display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;color:#006EE5;cursor:pointer">חזרה למסלול</div>
+
+        <div style="background:#fff;border:1px solid #E4EAF1;border-radius:14px;box-shadow:0 2px 8px rgba(15,46,82,.06);padding:22px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+            <div style="padding:8px 14px;border-radius:8px;font-size:13.5px;font-weight:800;background:{{ lesson.bg }};color:{{ lesson.color }}">{{ lesson.badge }}</div>
+            <div style="font-size:22px;font-weight:800;color:#121213">{{ lesson.title }}</div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:8px;background:#EAF7F1;color:#00764A;border-radius:100px;padding:9px 15px;font-size:14px;font-weight:700">מטרה: {{ lesson.goal }}</div>
+            <div style="display:flex;align-items:center;gap:8px;background:#F7F9FC;color:#585B5E;border-radius:100px;padding:9px 15px;font-size:14px;font-weight:600">{{ lesson.durLabel }}</div>
+          </div>
+          <sc-if value="{{ lesson.materials }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:14px;font-weight:600;color:#6A6D70">{{ lesson.materials }}</div>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ lesson.note }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="KunikDesignSystem_63ae72.Callout" tone="{{ lesson.tone }}" hint-size="100%,64px">{{ lesson.note }}</x-import>
+        </sc-if>
+
+        <sc-if value="{{ lesson.hasDevice }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px">
+            <div style="background:#fff;border:1px solid #E4EAF1;border-radius:12px;padding:15px 17px;display:flex;flex-direction:column;gap:6px">
+              <div style="font-size:13px;font-weight:800;color:#6A6D70">{{ lesson.devA }}</div>
+              <div style="font-size:15.5px;font-weight:600;color:#121213">{{ lesson.android }}</div>
+            </div>
+            <div style="background:#fff;border:1px solid #E4EAF1;border-radius:12px;padding:15px 17px;display:flex;flex-direction:column;gap:6px">
+              <div style="font-size:13px;font-weight:800;color:#6A6D70">{{ lesson.devB }}</div>
+              <div style="font-size:15.5px;font-weight:600;color:#121213">{{ lesson.ios }}</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ lesson.hasPhases }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:14px" hint-placeholder-count="5">
+            <sc-for list="{{ lesson.phases }}" as="ph" hint-placeholder-count="5">
+              <div style="background:#fff;border:1px solid #E4EAF1;border-radius:14px;box-shadow:0 2px 8px rgba(15,46,82,.06);overflow:hidden">
+                <div style="display:flex;align-items:center;gap:11px;padding:14px 18px;border-bottom:1px solid #F0F3F7">
+                  <div style="width:10px;height:10px;border-radius:50%;background:{{ ph.color }}"></div>
+                  <div style="font-size:16px;font-weight:800;color:#0F2E52">{{ ph.name }}</div>
+                  <div style="font-family:Heebo,sans-serif;font-size:13.5px;font-weight:700;color:#8D9296">{{ ph.time }} דקות</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:9px;padding:15px 18px" hint-placeholder-count="3">
+                  <sc-for list="{{ ph.steps }}" as="st" hint-placeholder-count="3">
+                    <div style="display:flex;align-items:flex-start;gap:10px;background:#F7F9FC;border-radius:10px;padding:12px 14px">
+                      <div style="width:6px;height:6px;border-radius:50%;background:{{ ph.color }};margin-top:7px;flex:none"></div>
+                      <div style="font-size:16px;font-weight:600;color:#121213;line-height:1.5;text-wrap:pretty">{{ st }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ lesson.needsWriting }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px dashed #C3D4E8;border-radius:14px;padding:24px;text-align:center;display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:16px;font-weight:800;color:#0F2E52">המערך המלא של המפגש הזה עוד לא נכתב</div>
+            <div style="font-size:14.5px;font-weight:500;color:#6A6D70">קודם נאשר את המסלול והמספור. אחרי שתאשרי — אני כותב את חמשת השלבים במפגש הזה באותו מבנה של רמה 1.</div>
+          </div>
+        </sc-if>
+
+        <div style="background:#fff;border:1px solid #E4EAF1;border-radius:14px;box-shadow:0 2px 8px rgba(15,46,82,.06);padding:20px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <div style="font-size:17px;font-weight:800;color:#0F2E52">שיעורי בית לשבוע</div>
+              <div style="font-size:13.5px;font-weight:500;color:#6A6D70">אותן משימות בדיוק נשלחות בוואטסאפ ומודפסות בגליון. אפשר למחוק ולהוסיף משלך.</div>
+            </div>
+            <x-import component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="whatsapp" href="{{ lesson.waHref }}" target="_blank" hint-size="180px,42px">שליחה בוואטסאפ</x-import>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:9px" hint-placeholder-count="3">
+            <sc-for list="{{ lesson.hw }}" as="h" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:12px;background:#F7F9FC;border:1px solid #F0F3F7;border-radius:10px;padding:13px 15px">
+                <div style="flex:none;width:26px;height:26px;border-radius:50%;background:#fff;border:2px solid #DFE2E4;display:flex;align-items:center;justify-content:center;font-family:Heebo,sans-serif;font-size:13px;font-weight:900;color:#6A6D70">{{ h.n }}</div>
+                <div style="flex:1;font-size:16.5px;font-weight:600;color:#121213;line-height:1.5;text-wrap:pretty">{{ h.text }}</div>
+                <div onClick="{{ h.onRemove }}" title="מחיקת המשימה" style="flex:none;width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#8D9296" style-hover="background:#FBEAEA;color:#BE0000">
+                  <x-import component-from-global-scope="KunikDesignSystem_63ae72.Icon" name="trash" size="18" hint-size="18px,18px"></x-import>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:9px;align-items:center">
+            <div style="flex:1 1 auto;min-width:0">
+              <x-import component-from-global-scope="KunikDesignSystem_63ae72.TextField" placeholder="הוספת משימה משלך — למשל: להתקשר לנכדה" value="{{ lesson.draft }}" onChange="{{ lesson.onDraft }}" onKeyDown="{{ lesson.onDraftKey }}" dc-props="{{ fieldProps }}" hint-size="100%,46px"></x-import>
+            </div>
+            <div style="flex:none;display:flex;align-items:center">
+              <x-import component-from-global-scope="KunikDesignSystem_63ae72.Button" onClick="{{ lesson.onAdd }}" hint-size="110px,44px">הוספה</x-import>
+            </div>
+            <sc-if value="{{ lesson.edited }}" hint-placeholder-val="{{ false }}">
+              <div style="flex:none;display:flex;align-items:center">
+                <x-import component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="quiet" onClick="{{ lesson.onReset }}" hint-size="140px,44px">חזרה למקורי</x-import>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isStudents }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <x-import component-from-global-scope="KunikDesignSystem_63ae72.Callout" tone="info" label="איך זה עובד" hint-size="100%,72px">
+          הרשימה נקראת מהתלמידות שכבר הזנת בכלי הניהול, באותו מכשיר. "עצרנו במפגש" מתבסס על שדה השיעור הנוכחי בכרטיס התלמיד/ה — וכאן הוא סוף־סוף מצביע על מפגש אמיתי אחד, עם שם.
+        </x-import>
+
+        <sc-if value="{{ hasStudents }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:12px" hint-placeholder-count="3">
+            <sc-for list="{{ studentRows }}" as="r" hint-placeholder-count="3">
+              <div style="background:#fff;border:1px solid #E4EAF1;border-radius:14px;box-shadow:0 2px 8px rgba(15,46,82,.06);padding:18px;display:flex;gap:18px;flex-wrap:wrap;align-items:center">
+                <div style="flex:1;min-width:220px;display:flex;flex-direction:column;gap:7px">
+                  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                    <div style="font-size:17px;font-weight:800;color:#121213">{{ r.name }}</div>
+                    <div style="font-size:12.5px;font-weight:800;padding:5px 10px;border-radius:100px;background:{{ r.bg }};color:{{ r.color }}">{{ r.levelLabel }}</div>
+                  </div>
+                  <div style="font-size:14.5px;font-weight:600;color:#6A6D70">{{ r.doneLabel }}</div>
+                  <div style="font-size:15.5px;font-weight:700;color:#0F2E52">{{ r.nextLabel }}</div>
+                </div>
+                <div style="display:flex;gap:9px;flex-wrap:wrap">
+                  <x-import component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="secondary" size="sm" onClick="{{ r.onOpen }}" hint-size="130px,38px">פתחי את המערך</x-import>
+                  <x-import component-from-global-scope="KunikDesignSystem_63ae72.Button" variant="whatsapp" size="sm" href="{{ r.waHref }}" disabled="{{ r.noPhone }}" target="_blank" hint-size="150px,38px">{{ r.waLabel }}</x-import>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ noStudents }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px dashed #C3D4E8;border-radius:14px;padding:30px;text-align:center;display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:16.5px;font-weight:800;color:#0F2E52">אין כאן תלמידות עדיין</div>
+            <div style="font-size:14.5px;font-weight:500;color:#6A6D70">הרשימה נקראת מהמכשיר שבו הזנת אותן בכלי הניהול. פתחי את ניהול העסק באותו דפדפן, והן יופיעו כאן.</div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startTab&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;map&quot;,&quot;lesson&quot;,&quot;students&quot;],&quot;default&quot;:&quot;map&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;תצוגה&quot;},&quot;defaultLevel&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;],&quot;default&quot;:&quot;1&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;תצוגה&quot;},&quot;lessonMinutes&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:45,&quot;min&quot;:30,&quot;max&quot;:90,&quot;step&quot;:5,&quot;unit&quot;:&quot;דקות&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;מבנה השיעור&quot;},&quot;showDeviceSplit&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;מבנה השיעור&quot;}}">
+const LV = { 1: '#006EE5', 2: '#00A563', 3: '#0F2E52', 4: '#E1631B' };
+const LV_BG = { 1: '#EAF2FD', 2: '#EAF7F1', 3: '#EAEEF4', 4: '#FDEEE6' };
+const LV_NAME = {
+  1: 'רמה 1 · סמארטפון — יסודות',
+  2: 'רמה 2 · טלפון מתקדם ואינטרנט',
+  3: 'רמה 3 · מחשב',
+  4: 'רמה 4 · בינה מלאכותית'
+};
+const PHASES = [
+  ['open', 'פתיחה', 5, '#006EE5'],
+  ['review', 'חזרה', 7, '#0F2E52'],
+  ['main', 'חומר חדש', 18, '#00A563'],
+  ['drill', 'תרגול מודרך', 10, '#E1631B'],
+  ['close', 'סיום', 5, '#0F2E52']
+];
+const LEVEL_MAP = { 'מתחיל': 1, 'בינוני': 2, 'מתקדם': 4 };
+
+const CUR = {
+  1: [
+    { n: 1, title: 'הטלפון שלי, ובגודל שנוח לי', goal: 'לגעת, לגלול, ולהגדיל את הטקסט כך שנוח לקרוא',
+      materials: 'ציוד: הטלפון של התלמיד/ה טעון, המערך הזה על המחשב הנייד',
+      tone: 'tip', note: 'אי אפשר "לשבור" טלפון בלחיצה. הכל הפיך — נסי בחופשיות.',
+      android: 'הגדרות → תצוגה → גודל וסגנון גופן', ios: 'הגדרות → תצוגה ובהירות → גודל טקסט',
+      p: {
+        open: ['הצגה קצרה: מי את ומה נעשה היום', 'שאלי: "מה הכי מפחיד אותך בטלפון?" — הקשיבי בלי לתקן'],
+        review: ['בדיקת פתיחה: מה את כבר עושה בטלפון לבד?', 'רשמי בסיכום: איזה מכשיר, איך הראייה, איך השמיעה'],
+        main: ['חלקי הטלפון: כפתור הפעלה, ווליום, שקע טעינה, מצלמה', 'לחיצה קצרה מול לחיצה ארוכה — תרגול על אייקון', 'גלילה באצבע אחת, למעלה ולמטה', 'הגדלת הטקסט בכל המכשיר', 'הפעלת "טקסט מודגש" אם הקריאה קשה'],
+        drill: ['פתחי את הגלריה וגללי בתמונות', 'הגדילי תמונה בשתי אצבעות', 'חזרה למסך הבית — לבד'],
+        close: ['הראי את שלוש המשימות לשבוע', '"נתקעת? כתבי לי בוואטסאפ ואחזור אלייך"']
+      },
+      hw: ['הדליקי וכבי את מסך הטלפון חמש פעמים', 'פתחי את הגלריה והגדילי תמונה אחת', 'בדקי שגודל הטקסט נוח לך — ואם לא, הגדילי עוד'] },
+    { n: 2, title: 'נעילה וקוד אישי', goal: 'לנעול את הטלפון ולדעת את הקוד בביטחון',
+      tone: 'warn', note: 'קוד טוב: לא תאריך לידה ולא 1234. את הקוד לא מוסרים בטלפון לאף אחד — גם לא ל"בנק".',
+      android: 'הגדרות → אבטחה → נעילת מסך', ios: 'הגדרות → Face ID וקוד גישה',
+      p: {
+        open: ['שאלי: "מה קורה אם הטלפון נופל לך ברחוב?"', 'הסבירי: קוד נעילה הוא כמו מפתח לבית'],
+        review: ['גודל הטקסט נשאר נוח? תקנו יחד אם לא', 'מה מהמשימות של השבוע הצליח, ומה לא'],
+        main: ['הגדרת קוד נעילה חדש יחד', 'טביעת אצבע או זיהוי פנים — למה זה נוח יותר', 'מה עושים אם שוכחים את הקוד', 'למה לא כותבים את הקוד על פתק'],
+        drill: ['נעילה ופתיחה עם הקוד החדש, שלוש פעמים', 'פתיחה בטביעת אצבע'],
+        close: ['החליטו יחד: מי מבני המשפחה יידע את הקוד למקרה חירום']
+      },
+      hw: ['נעלי ופתחי את הטלפון עם הקוד חמש פעמים', 'ספרי את הקוד לבן/בת משפחה אחד/ת שאת סומכת עליו', 'בדקי שאין פתק עם הקוד מודבק לטלפון'] },
+    { n: 3, title: 'שיחות ואנשי קשר', goal: 'לחייג לבד ולשמור מספר חדש',
+      p: {
+        open: ['למי את מתקשרת בדרך כלל? מהם נתחיל'],
+        review: ['פתיחת הטלפון עם הקוד — לבד', 'מה היה קשה השבוע'],
+        main: ['שלוש הלשוניות באפליקציית הטלפון: חיוג, אחרונים, אנשי קשר', 'חיוג ידני: הקלדת מספר', 'חיוג מתוך אנשי קשר', 'הוספת איש קשר: שם, מספר, שמירה', 'קבלת שיחה: החלקה לירוק'],
+        drill: ['חייגי אליי — שיחה של חצי דקה', 'שמרי את המספר שלי בשם "דנה — מורה"'],
+        close: ['שלוש המשימות לשבוע']
+      },
+      hw: ['שמרי את מספר הרופא/ה בשם "רופא משפחה"', 'חייגי לבן/בת משפחה מתוך אנשי הקשר, לא מחיוג ידני', 'מצאי שיחה מאתמול ברשימת "אחרונים"'] },
+    { n: 4, title: 'WhatsApp — הודעה, תמונה וקול', goal: 'לשלוח הודעת טקסט, תמונה והודעה קולית',
+      tone: 'tip', note: 'שני ✓✓ אפורים — ההודעה נשלחה. שני ✓✓ כחולים — היא נקראה.',
+      p: {
+        open: ['עם מי את הכי רוצה להיות בקשר? נתחיל ממנו'],
+        review: ['שמירת איש קשר חדש — לבד', 'האם חייגת מרשימת אנשי הקשר השבוע?'],
+        main: ['מסך השיחות — מה רואים כאן', 'שליחת הודעת טקסט', 'הודעה קולית: לחיצה ארוכה על המיקרופון', 'שליחת תמונה מהגלריה', 'שני ה-✓ — מה הם אומרים'],
+        drill: ['שלחי לי הודעה קולית', 'שלחי לי תמונה מהגלריה'],
+        close: ['מחיקת הודעה שנשלחה בטעות: לחיצה ארוכה ואז מחיקה']
+      },
+      hw: ['שלחי הודעת טקסט לשני אנשים שונים', 'שלחי תמונה אחת מהגלריה למשפחה', 'שלחי הודעה קולית אחת'] },
+    { n: 5, title: 'WhatsApp — קבוצות', goal: 'להסתדר בקבוצת משפחה בלי להתבלבל',
+      tone: 'warn', note: 'הודעה שהגיעה לקבוצה הלא נכונה — לחיצה ארוכה ואז מחיקה. זה קורה לכולם.',
+      p: {
+        open: ['באילו קבוצות את נמצאת, ומה מפריע בהן'],
+        review: ['שליחת תמונה — לבד', 'מה קרה עם ההודעה הקולית'],
+        main: ['קבוצה מול שיחה אישית — איך מזהים לפני ששולחים', 'גלילה בקבוצה וקריאה', 'תשובה להודעה מסוימת', 'השתקת קבוצה רועשת', 'אמוג\'י אחד, בלי להיסחף'],
+        drill: ['שלחי הודעה לקבוצת המשפחה', 'השתיקי קבוצה לשמונה שעות'],
+        close: ['איפה רואים שהקבוצה מושתקת, ואיך מבטלים']
+      },
+      hw: ['כתבי הודעה אחת בקבוצת המשפחה', 'השתיקי קבוצה רועשת אחת', 'תרגלי מחיקה: שלחי הודעה לעצמך ומחקי אותה'] },
+    { n: 6, title: 'SMS וקודי אימות', goal: 'לקרוא הודעת SMS ולהבין שקוד אימות לא עובר לאף אחד',
+      tone: 'warn', note: 'אף בנק, אף חברת אשראי ואף "נכד" לא מבקשים קוד אימות. מי שמבקש — מנסה לרמות.',
+      p: {
+        open: ['קיבלת פעם הודעה ולא הבנת ממי היא?'],
+        review: ['הודעה בקבוצה — לבד', 'האם ההשתקה עבדה'],
+        main: ['אפליקציית ההודעות — זו לא וואטסאפ', 'SMS מגיע גם בלי אינטרנט', 'מי שלח: איש קשר מול מספר לא מוכר', 'איך נראה קוד אימות אמיתי מהבנק', 'הכלל: קוד לא נמסר לאף אחד, בשום שיחה'],
+        drill: ['קריאת הודעה ישנה מהתיבה', 'משחק תפקידים: אני "הבנק" ומבקשת קוד — מה את עונה?'],
+        close: ['למי מתקשרים כשמשהו מרגיש מוזר']
+      },
+      hw: ['פתחי את אפליקציית ההודעות ומצאי הודעה ישנה', 'ספרי לבן/בת משפחה על כלל הקוד', 'קיבלת הודעה חשודה? צלמי מסך ושלחי לי'] },
+    { n: 7, title: 'מצלמה וגלריה', goal: 'לצלם, למצוא את התמונה ולשלוח אותה',
+      p: {
+        open: ['מה את הכי רוצה לצלם?'],
+        review: ['מה עשית עם כלל הקוד השבוע', 'פתיחת וואטסאפ ושליחת הודעה — לבד'],
+        main: ['פתיחת המצלמה מהמסך הנעול', 'תמונה מול וידאו', 'סלפי: החלפת מצלמה', 'הגלריה מסודרת לפי תאריך', 'מחיקת תמונה מטושטשת'],
+        drill: ['צלמי שלוש תמונות', 'שלחי אחת מהן בוואטסאפ'],
+        close: ['לאן התמונות נשמרות, ולמה אין מה לפחד שייעלמו']
+      },
+      hw: ['צלמי תמונה של הבית, של אוכל ושל נוף', 'שלחי אחת מהן למשפחה', 'מחקי תמונה אחת שלא יצאה טוב'] },
+    { n: 8, title: 'חיפוש בגוגל', goal: 'לשאול את גוגל שאלה בשפה שלך ולהבין את התשובה',
+      tone: 'tip', note: 'אפשר לשאול כמו שמדברים: "מתי סוגרים הסופר ברמת השרון".',
+      p: {
+        open: ['מה היית רוצה לדעת עכשיו? מזה נתחיל'],
+        review: ['צילום ושליחה — לבד', 'סיכום קצר: מה כבר עושה בלי עזרה'],
+        main: ['פתיחת גוגל', 'הקלדת שאלה בעברית', 'חיפוש בדיבור: לחיצה על המיקרופון', 'בדיקת מזג האוויר', 'זהירות: לא כל מה שכתוב נכון'],
+        drill: ['שאלי שתי שאלות שבחרת בעצמך', 'חפשי מספר טלפון של מרפאה'],
+        close: ['סיכום הרמה: מה את יודעת לעשות לבד', 'מה מחכה ברמה 2']
+      },
+      hw: ['חפשי את מזג האוויר למחר בעיר שלך', 'חפשי מספר טלפון של מקום שאת צריכה', 'שאלי את גוגל שאלה אחת בדיבור'] }
+  ],
+  2: [
+    { n: 1, title: 'ניווט — Waze ותחבורה ציבורית', goal: 'להגיע לכתובת חדשה לבד',
+      tone: 'tip', note: 'ב-Waze רואים מראש כמה זמן הנסיעה. גם אם טועים בפנייה — הוא מחשב מסלול חדש לבד.',
+      android: 'הקול והשפה: Waze → הגדרות → קול ופקודות', ios: 'הקול והשפה: Waze → הגדרות → קול ופקודות',
+      p: {
+        open: ['לאן את נוסעת בדרך כלל, ולאן היית רוצה להעז?'],
+        review: ['חיפוש בגוגל של שאלה אחת — לבד', 'מה מרמה 1 עוד מרגיש לא בטוח'],
+        main: ['פתיחת Waze והרשאת מיקום', 'הקלדת כתובת יעד', 'קריאת הזמן והמסלול לפני שמתחילים', 'הפעלת ניווט וקול בעברית', 'תחבורה ציבורית: חיפוש קו ושעה'],
+        drill: ['נווטי לכתובת של בן/בת משפחה', 'בדקי מתי האוטובוס הבא מהתחנה הקרובה'],
+        close: ['סגירת הניווט בסוף הנסיעה — למה זה חוסך סוללה']
+      },
+      hw: ['פתחי Waze וחפשי נתיב לסופר הקרוב', 'בדקי כמה זמן לוקח להגיע לבית של בן/בת משפחה', 'חפשי איזה אוטובוס מגיע מהעיר שלך למרכז'] },
+    { n: 2, title: 'לוח שנה ותזכורות', goal: 'לרשום תור ולקבל תזכורת בזמן',
+      tone: 'tip', note: 'תזכורת חוזרת נשמעת גם כשהטלפון במצב שקט.',
+      android: 'הגדרות שעון: אפליקציית שעון → תזכורות', ios: 'הגדרות שעון: אפליקציית תזכורות',
+      p: {
+        open: ['איזה תור שכחת פעם? מזה נתחיל'],
+        review: ['ניווט לכתובת — לבד', 'האם השתמשת בתחבורה ציבורית השבוע'],
+        main: ['פתיחת לוח השנה ותצוגת שבוע', 'הוספת אירוע: שם, תאריך, שעה', 'הוספת תזכורת יום לפני', 'תזכורת חוזרת יומית לתרופה', 'איך מוחקים אירוע שהתבטל'],
+        drill: ['הוסיפי תור אמיתי שיש לך', 'הגדירי תזכורת לתרופה שאת לוקחת'],
+        close: ['הראי איפה רואים מה קורה השבוע']
+      },
+      hw: ['הוסיפי תור אמיתי ללוח השנה', 'הגדירי תזכורת יום לפני', 'הגדירי תזכורת חוזרת לתרופה'] },
+    { n: 3, title: 'אפליקציית קופת החולים', goal: 'להזמין תור ולראות מרשם בלי טלפון למרפאה',
+      materials: 'ציוד: מספר ת"ז וסיסמה לקופת החולים, מוכנים מראש',
+      p: {
+        open: ['על מה את מבזבזת הכי הרבה זמן בטלפון למרפאה?'],
+        review: ['הוספת תור ללוח השנה — לבד', 'האם התזכורת לתרופה עבדה'],
+        main: ['כניסה לאפליקציה של הקופה שלך', 'המסך הראשי: תורים, מרשמים, בדיקות', 'הזמנת תור לרופא/ה', 'חידוש מרשם', 'קריאת תשובת בדיקה — ומה לא מפרשים לבד'],
+        drill: ['בדקי מתי התור הקרוב שלך', 'מצאי מרשם קיים אחד'],
+        close: ['הוספת התור מהאפליקציה גם ללוח השנה']
+      },
+      hw: ['היכנסי לאפליקציה ובדקי מה התור הקרוב', 'מצאי מרשם אחד', 'בדקי אם יש תשובה לבדיקה שעשית'] },
+    { n: 4, title: 'שיחות וידאו — FaceTime ו-Zoom', goal: 'להתחיל ולקבל שיחת וידאו לבד',
+      tone: 'tip', note: 'שבי מול החלון, לא כשהחלון מאחורייך — כך רואים אותך.',
+      android: 'שיחות וידאו: וואטסאפ או Google Meet', ios: 'שיחות וידאו: FaceTime מתוך אנשי הקשר',
+      p: {
+        open: ['את מי היית רוצה לראות ולא רק לשמוע?'],
+        review: ['הזמנת תור באפליקציה — לבד', 'מה היה קשה השבוע'],
+        main: ['התחלת שיחת וידאו מאיש קשר', 'קבלת שיחת וידאו נכנסת', 'השתקת מיקרופון וכיבוי מצלמה', 'הצטרפות ל-Zoom דרך קישור שנשלח', 'איפה מציבים את הטלפון כדי שהידיים יהיו חופשיות'],
+        drill: ['התקשרי אליי בשיחת וידאו לדקה', 'כבי והדליקי מצלמה בזמן השיחה'],
+        close: ['תיאום שיחה אמיתית עם המשפחה לשבוע הבא']
+      },
+      hw: ['תאמי שיחת וידאו של חמש דקות עם המשפחה', 'תרגלי כיבוי והדלקה של המצלמה', 'שאלי בשיחה: "הקול שלי נשמע ברור?"'] },
+    { n: 5, title: 'תמונות בענן — לחפש ולשתף', goal: 'למצוא תמונה ישנה ולשתף אלבום',
+      tone: 'tip', note: 'התמונות שמורות גם אם הטלפון נשבר או אובד. זו בדיוק המטרה של הענן.',
+      android: 'Google Photos מותקן מראש', ios: 'תמונות ב-iCloud, או Google Photos אם מותקן',
+      p: {
+        open: ['איזו תמונה ישנה את מחפשת ולא מוצאת?'],
+        review: ['שיחת וידאו — לבד', 'האם השיחה עם המשפחה קרתה'],
+        main: ['מה זה ענן, בשתי שורות', 'חיפוש חכם: "פסח", "נכדים", שם של אדם', 'יצירת אלבום מחמש תמונות', 'שיתוף אלבום בקישור', 'למה כדאי לבדוק שהגיבוי דולק'],
+        drill: ['חפשי תמונה לפי מילה שבחרת', 'צרי אלבום ותני לו שם'],
+        close: ['שליחת האלבום לבן/בת משפחה יחד']
+      },
+      hw: ['חפשי תמונה לפי מילה: "פסח", "קיץ", או שם של נכד/ה', 'צרי אלבום מחמש תמונות', 'שתפי את האלבום בוואטסאפ'] },
+    { n: 6, title: 'הונאות ברשת', goal: 'לזהות הודעה או שיחה שמנסה לרמות, ולדעת מה עושים',
+      tone: 'warn', note: 'הכלל היחיד שצריך לזכור: כשמישהו מזרז אותך — עוצרים. עסקה אמיתית סובלת חמש דקות.',
+      p: {
+        open: ['שמעת על מישהו שרימו אותו? מה קרה שם'],
+        review: ['חיפוש ושיתוף תמונות — לבד', 'חזרה על כלל קוד האימות מרמה 1'],
+        main: ['פישינג: דוגמת הודעה מזויפת מהבנק', 'הונאת "הנכד בצרות" — למה היא עובדת', 'זיהוי אתר מאובטח: מנעול וכתובת נכונה', 'בקשת חברות או הודעה מאדם שלא ציפית לו', 'מה עושים אחרי טעות: מתקשרים לבנק ולמשפחה'],
+        drill: ['משחק תפקידים: אני מתקשרת בשם "חברת האשראי"', 'עברו יחד על תיבת ההודעות וסמנו מה חשוד'],
+        close: ['סיכום הרמה: מה את עושה לבד', 'שמרי מספר אחד להתקשר אליו כשמשהו מרגיש מוזר']
+      },
+      hw: ['ספרי לבן/בת משפחה על הונאת "הנכד בצרות"', 'בדקי בכתובת של אתר אם יש מנעול', 'הודעה חשודה? צלמי מסך ושלחי לי לפני שאת עושה משהו'] }
+  ],
+  3: [
+    { n: 1, title: 'הכרת המחשב — עכבר וחלונות', goal: 'להפעיל, ללחוץ, ולסגור חלון בלי חשש',
+      materials: 'ציוד: המחשב של התלמיד/ה, ועכבר רגיל אם יש רק משטח מגע',
+      tone: 'tip', note: 'לחיצה על עכבר לא מוחקת כלום. אם חלון נסגר בטעות — פותחים אותו שוב.',
+      p: {
+        open: ['למה את רוצה מחשב, ולא רק טלפון?'],
+        review: ['פתיחת הטלפון וחיפוש בגוגל — לבד', 'מה מרמה 2 עוד לא ברור'],
+        main: ['הדלקה וכיבוי נכון — לא מהכבל', 'העכבר: לחיצה אחת, לחיצה כפולה, לחיצה ימנית', 'הסמן על המסך — מה הוא עושה', 'חלון: פתיחה, הקטנה, סגירה', 'הגדלת גודל הטקסט והסמן במחשב'],
+        drill: ['פתחי אייקון בלחיצה כפולה', 'הקטיני חלון והחזירי אותו', 'סגרי שני חלונות'],
+        close: ['לאן נעלם חלון שהוקטן — שורת המשימות למטה']
+      },
+      devLabels: ['Windows', 'Mac'],
+      android: 'הכל מתחיל מתפריט "התחל" בפינה', ios: 'הכל מתחיל משורת התוכנות למטה (Dock)',
+      hw: ['הדליקי וכיבי את המחשב פעם אחת', 'תרגלי לחיצה כפולה על אייקון', 'פתחי חלון וסגרי אותו'] },
+    { n: 2, title: 'מקלדת — הקלדה, העתקה והדבקה', goal: 'להקליד בעברית ובאנגלית ולהעביר טקסט',
+      tone: 'tip', note: 'טעות בהקלדה נמחקת בכפתור אחד. אין דרך "לקלקל" מסמך.',
+      p: {
+        open: ['מה היית רוצה לכתוב במחשב?'],
+        review: ['פתיחה וסגירה של חלון — לבד', 'האם הלחיצה הכפולה מסתדרת'],
+        main: ['סיור על המקלדת: רווח, מחיקה, Enter', 'אות גדולה באנגלית: Shift', 'החלפת שפה מעברית לאנגלית', 'סימון טקסט עם העכבר', 'העתקה והדבקה'],
+        drill: ['הקלידי שלוש שורות על עצמך', 'סמני משפט, העתיקי, והדביקי מתחת'],
+        close: ['איפה נשמר מה שהקלדנו — טיזר למפגש הבא']
+      },
+      hw: ['הקלידי שלוש שורות על עצמך', 'החליפי שפה מעברית לאנגלית וחזרה', 'העתיקי משפט והדביקי אותו במקום אחר'] },
+    { n: 3, title: 'קבצים ותיקיות', goal: 'לשמור מסמך ולמצוא אותו שוב מחר',
+      tone: 'tip', note: 'תיקייה היא בדיוק כמו תיקיית קרטון בארון: שם שאת בחרת, ובתוכה דפים.',
+      p: {
+        open: ['איך את מסדרת נייר בבית? באותו היגיון נסדר כאן'],
+        review: ['הקלדה והעתקה — לבד', 'מה הצליח מהמשימות'],
+        main: ['שמירת מסמך: "שמירה בשם" ובחירת שם', 'איפה נשמר — התיקייה "מסמכים"', 'יצירת תיקייה חדשה', 'העברת קובץ לתיקייה', 'חיפוש קובץ לפי שם'],
+        drill: ['שמרי את מה שהקלדת בשם שתזכרי', 'צרי תיקייה בשם "שלי" והעבירי אליה את הקובץ'],
+        close: ['כלל אחד: שם ברור עדיף על סדר מושלם']
+      },
+      hw: ['שמרי מסמך בשם שאת תזכרי', 'צרי תיקייה בשם "שלי" ושימי בה את המסמך', 'מצאי את המסמך בלי עזרה'] },
+    { n: 4, title: 'דפדפן ואינטרנט', goal: 'להגיע לאתר, לפתוח לשונית ולשמור סימנייה',
+      tone: 'warn', note: 'חלון שנפתח לבד עם "זכית" או "המחשב נגוע" — סוגרים בלי ללחוץ בתוכו.',
+      p: {
+        open: ['לאיזה אתר את נכנסת הכי הרבה?'],
+        review: ['מצאי את הקובץ מהשבוע שעבר — לבד', 'האם התיקייה עזרה'],
+        main: ['שורת הכתובת מול תיבת החיפוש', 'כניסה לאתר לפי כתובת', 'לשוניות: פתיחה ומעבר ביניהן', 'סימניות: שמירה וחזרה', 'זיהוי פרסומת מול תוצאה אמיתית'],
+        drill: ['היכנסי לאתר חדשות ושמרי סימנייה', 'פתחי שתי לשוניות ועברי ביניהן'],
+        close: ['הראי איך חוזרים לסימנייה מחר']
+      },
+      hw: ['היכנסי לאתר חדשות והוסיפי אותו לסימניות', 'פתחי שתי לשוניות ועברי ביניהן', 'חפשי משהו בגוגל מהמחשב'] },
+    { n: 5, title: 'מייל במחשב', goal: 'לקרוא, לענות ולצרף קובץ',
+      tone: 'warn', note: 'קובץ מצורף ממישהו שלא ציפית לו — לא פותחים. שואלים קודם.',
+      p: {
+        open: ['מי שולח לך מיילים, ומה את עושה איתם?'],
+        review: ['כניסה לאתר ולשונית חדשה — לבד', 'האם הסימנייה נשמרה'],
+        main: ['כניסה לתיבת המייל', 'קריאת מייל: מי שלח, מתי, נושא', 'תשובה למייל', 'כתיבת מייל חדש: נמען, נושא, גוף', 'צירוף קובץ או תמונה', 'ספאם: איך מזהים ומה עושים'],
+        drill: ['שלחי מייל לעצמך עם נושא "בדיקה"', 'צרפי אליו תמונה'],
+        close: ['הבדל בין תשובה לשולח לתשובה לכולם']
+      },
+      hw: ['שלחי מייל לעצמך עם נושא "בדיקה"', 'צרפי תמונה למייל', 'מצאי מייל ישן מהחודש שעבר'] },
+    { n: 6, title: 'שירותים דיגיטליים — gov.il', goal: 'לבצע פעולה אחת מקצה לקצה באתר ממשלתי',
+      materials: 'ציוד: ת"ז, והטלפון בהישג יד לקוד האימות',
+      p: {
+        open: ['איזה סידור מול הרשויות דחית כי זה מסובך?'],
+        review: ['שליחת מייל עם קובץ — לבד', 'מה היה קשה'],
+        main: ['כניסה ל-gov.il וחיפוש שירות', 'זיהוי אתר ממשלתי אמיתי', 'הזדהות עם ת"ז וקוד אימות בטלפון', 'מילוי טופס אחד יחד', 'שמירת האישור כקובץ בתיקייה שלך'],
+        drill: ['בצעו יחד בקשה אמיתית אחת מקצה לקצה'],
+        close: ['סיכום הרמה: מה את עושה במחשב לבד', 'מה מחכה ברמה 4']
+      },
+      hw: ['היכנסי ל-gov.il וחפשי שירות שנוגע אלייך', 'נסי להיכנס עם ת"ז וקוד אימות', 'רשמי שאלה אחת שלא הספקנו'] }
+  ],
+  4: [
+    { n: 1, title: 'שיחה ראשונה עם AI', goal: 'לשאול שלוש שאלות ולהרגיש בנוח',
+      materials: 'ציוד: חשבון מוכן מראש, כדי לא לבזבז את המפגש על הרשמה',
+      tone: 'tip', note: 'אין שאלה טיפשית, ואפשר תמיד לבקש "תסביר לי שוב, פשוט יותר".',
+      p: {
+        open: ['מה שמעת על בינה מלאכותית, ומה מפריע לך בזה?'],
+        review: ['חיפוש בגוגל של שאלה — לבד', 'מה מהרמות הקודמות עוד לא זורם'],
+        main: ['מה זה AI, בשתי שורות: עוזר שעונה בכתב', 'איפה מקלידים ואיפה מופיעה התשובה', 'שאלה ראשונה יחד: "תסביר לי מה זה AI בשלוש שורות"', 'דיבור במקום הקלדה', 'הגבולות: לפעמים טועה, לא מחליף רופא/ה'],
+        drill: ['שאלי שלוש שאלות שבחרת בעצמך', 'בקשי על אחת מהן: "פשוט יותר"'],
+        close: ['איפה השיחות נשמרות ואיך חוזרים אליהן']
+      },
+      hw: ['שאלי שלוש שאלות שבחרת לבד', 'רשמי תשובה אחת שהפתיעה אותך', 'בדקי בגוגל אם תשובה אחת נכונה'] },
+    { n: 2, title: 'AI לכתיבה — מכתבים וברכות', goal: 'לקבל נוסח מוכן למכתב אמיתי',
+      tone: 'tip', note: 'הנוסח הראשון הוא טיוטה. אומרים מה לשנות, והוא כותב שוב.',
+      p: {
+        open: ['איזה מכתב את דוחה כבר שבועות?'],
+        review: ['שיחה עם AI — לבד', 'איזו תשובה הפתיעה אותך'],
+        main: ['לבקש בקשה ברורה: למי, על מה, באיזה טון', 'מכתב לגורם רשמי — בנק, קופת חולים, עירייה', 'ברכה ליום הולדת לנכד/ה', 'לבקש תיקון: "קצר יותר", "מנומס יותר"', 'העתקת הנוסח לוואטסאפ או למייל'],
+        drill: ['כתבו יחד מכתב אמיתי אחד', 'בקשי ממנו גרסה קצרה יותר'],
+        close: ['הכלל: את מחליטה מה נשלח, לא הוא']
+      },
+      hw: ['בקשי מכתב קצר לגורם רשמי לפי צורך אמיתי', 'בקשי ברכת יום הולדת לנכד/ה', 'בקשי לכתוב את זה "פשוט יותר"'] },
+    { n: 3, title: 'AI להסבר ולתרגום', goal: 'להבין עלון תרופה או מסמך באנגלית',
+      tone: 'warn', note: 'הסבר של AI על תרופה הוא כדי להבין את השאלה — התשובה נשארת אצל הרופא/ה או הרוקח/ת.',
+      p: {
+        open: ['איזה מסמך קיבלת ולא הבנת?'],
+        review: ['המכתב שכתבנו — נשלח בסוף?', 'שאלה אחת ל-AI לבד'],
+        main: ['להעלות או להקליד קטע ולבקש הסבר', 'תרגום פסקה מאנגלית', 'המצלמה כמתרגמת: שלט, תפריט, עלון', 'לבקש "תסביר כמו למי שלא מבין בזה"', 'לרשום את השאלות שנשאל את הרופא/ה'],
+        drill: ['תרגמי עלון או הוראות הפעלה אמיתיות', 'בקשי הסבר במשפט אחד למשהו שלא הבנת'],
+        close: ['שמירת התרגום או שליחתו בוואטסאפ']
+      },
+      hw: ['תרגמי עלון או הוראות הפעלה', 'בקשי הסבר במשפט אחד למשהו שלא הבנת', 'תרגמי תפריט או שלט בעזרת המצלמה'] },
+    { n: 4, title: 'AI יוצר תמונות', goal: 'ליצור תמונה מתיאור ולשנות בה פרט',
+      tone: 'tip', note: 'זה לא ציור שלך ולא צילום אמיתי — זו תמונה שנוצרה מהמילים שאמרת. נחמד לברכות.',
+      p: {
+        open: ['איזו תמונה היית רוצה שתהיה קיימת ואין?'],
+        review: ['תרגום עם המצלמה — לבד', 'מה עבד ומה לא'],
+        main: ['תיאור פשוט: "ציור של פרחים צבעוניים באגרטל"', 'צפייה בתוצאה', 'בקשת שינוי: "רקע כחול", "בלי אנשים"', 'שמירת התמונה לגלריה', 'שימוש אמיתי: ברכה עם שם של נכד/ה'],
+        drill: ['צרי תמונה לפי רעיון שבחרת', 'בקשי לשנות בה פרט אחד'],
+        close: ['שליחת התמונה למשפחה יחד']
+      },
+      hw: ['צרי תמונה אחת לפי תיאור שבחרת', 'בקשי לשנות בה פרט אחד', 'שלחי אותה למשפחה בוואטסאפ'] },
+    { n: 5, title: 'AI בזהירות', goal: 'לדעת מה לא מספרים ל-AI ואיפה הוא טועה',
+      tone: 'warn', note: 'לא מזינים ת"ז, מספרי כרטיס, סיסמאות או תוצאות בדיקה עם שם. הכל נשמר אצלם.',
+      p: {
+        open: ['מה היית מספרת ל-AI, ומה בשום אופן לא?'],
+        review: ['יצירת תמונה — לבד', 'מה מכל הרמה הכי שימושי לך'],
+        main: ['מה לא מזינים: ת"ז, אשראי, סיסמאות, מסמכים רפואיים עם שם', 'למה הוא לפעמים ממציא בביטחון', 'איך מצליבים: גוגל, אתר רשמי, אדם אמיתי', 'קול או תמונה מזויפים — מה זה אומר לשיחת טלפון חשודה', 'הכלל: החלטה כספית או רפואית לא מתקבלת מ-AI'],
+        drill: ['מצאו יחד תשובה שלו שהיא לא מדויקת', 'בדקו אותה באתר רשמי'],
+        close: ['סיכום המסלול כולו: מה את עושה לבד היום', 'מה היית רוצה ללמוד עוד']
+      },
+      hw: ['רשמי שני דברים שלא מספרים ל-AI', 'מצאי תשובה אחת שלו שהייתה לא מדויקת', 'שאלי אותו שאלה רפואית — ואז שאלי את הרופא/ה'] }
+  ]
+};
+
+const HWKEY = 'dana_hw_edits_v1';
+
+class Component extends DCLogic {
+  state = { tab: null, level: null, openN: null, students: [], hwEdits: {}, draft: '' };
+
+  componentDidMount() {
+    let students = [], hwEdits = {};
+    try { students = JSON.parse(window.localStorage.getItem('tk_students') || '[]') || []; } catch (e) {}
+    try { hwEdits = JSON.parse(window.localStorage.getItem(HWKEY) || '{}') || {}; } catch (e) {}
+    if (!Array.isArray(students)) students = [];
+    this.setState({ students: students.filter(s => s && s.name), hwEdits });
+  }
+
+  go(tab) { this.setState({ tab }); }
+  openLesson(level, n) { this.setState({ tab: 'lesson', level, openN: n, draft: '' }); }
+
+  hwKey(level, n) { return 'L' + level + '-' + n; }
+  hwList(level, s) {
+    const o = this.state.hwEdits[this.hwKey(level, s.n)];
+    return Array.isArray(o) ? o : (s.hw || []);
+  }
+  saveHw(level, n, list) {
+    this.setState(st => {
+      const hwEdits = { ...st.hwEdits, [this.hwKey(level, n)]: list };
+      try { window.localStorage.setItem(HWKEY, JSON.stringify(hwEdits)); } catch (e) {}
+      return { hwEdits };
+    });
+  }
+  removeHw(level, s, i) {
+    this.saveHw(level, s.n, this.hwList(level, s).filter((x, xi) => xi !== i));
+  }
+  addHw(level, s) {
+    const t = (this.state.draft || '').trim();
+    if (!t) return;
+    this.saveHw(level, s.n, [...this.hwList(level, s), t]);
+    this.setState({ draft: '' });
+  }
+  resetHw(level, n) {
+    this.setState(st => {
+      const hwEdits = { ...st.hwEdits };
+      delete hwEdits[this.hwKey(level, n)];
+      try { window.localStorage.setItem(HWKEY, JSON.stringify(hwEdits)); } catch (e) {}
+      return { hwEdits };
+    });
+  }
+
+  hwText(level, s) {
+    const lines = this.hwList(level, s).map((t, i) => (i + 1) + '. ' + t);
+    return 'שיעורי בית לשבוע — ' + s.title + '\n\n' + lines.join('\n') + '\n\nבלי לחץ. כל משימה שעשית היא התקדמות.';
+  }
+
+  renderVals() {
+    const st = this.state;
+    const total = Math.max(30, Math.min(90, this.props.lessonMinutes ?? 45));
+    const level = st.level || Number(this.props.defaultLevel ?? 1);
+    const tab = st.tab || (this.props.startTab ?? 'map');
+    const showDevice = this.props.showDeviceSplit ?? true;
+
+    const tabDefs = [['map', 'מסלול הלימוד'], ['lesson', 'המפגש'], ['students', 'איפה עצרנו']];
+    const tabs = tabDefs.map(([id, label]) => ({
+      label, onClick: () => this.go(id),
+      bg: tab === id ? '#F4F7FB' : 'rgba(255,255,255,.08)',
+      fg: tab === id ? '#0F2E52' : '#C9DEF7'
+    }));
+
+    const levelPills = [1, 2, 3, 4].map(n => ({
+      label: 'רמה ' + n, color: LV[n], selected: level === n,
+      onClick: () => this.setState({ level: n, openN: null })
+    }));
+
+    const list = CUR[level] || [];
+    const sessions = list.map(s => ({
+      badge: 'מפגש ' + s.n, title: s.title, goal: s.goal,
+      bg: LV_BG[level], color: LV[level],
+      state: total + ' דקות',
+      onOpen: () => this.openLesson(level, s.n)
+    }));
+
+    const cur = list.find(s => s.n === st.openN) || list[0] || null;
+    let lesson = { hw: [], phases: [] };
+    if (cur) {
+      let mins = PHASES.map(([, , w]) => Math.round(w / 45 * total));
+      const drift = total - mins.reduce((a, b) => a + b, 0);
+      mins[2] = mins[2] + drift;
+      lesson = {
+        badge: 'מפגש ' + cur.n, title: cur.title, goal: cur.goal,
+        durLabel: total + ' דקות',
+        materials: cur.materials || '',
+        bg: LV_BG[level], color: LV[level],
+        tone: cur.tone || 'tip', note: cur.note || '',
+        hasDevice: !!(showDevice && cur.android), android: cur.android || '', ios: cur.ios || '',
+        devA: (cur.devLabels || ['אנדרואיד', 'אייפון'])[0], devB: (cur.devLabels || ['אנדרואיד', 'אייפון'])[1],
+        hasPhases: !!cur.p, needsWriting: !cur.p,
+        phases: cur.p ? PHASES.map(([key, name, , color], i) => ({
+          name, color, time: mins[i], steps: cur.p[key] || []
+        })) : [],
+        hw: this.hwList(level, cur).map((t, i) => ({
+          n: i + 1, text: t, onRemove: () => this.removeHw(level, cur, i)
+        })),
+        edited: !!this.state.hwEdits[this.hwKey(level, cur.n)],
+        onReset: () => this.resetHw(level, cur.n),
+        draft: this.state.draft,
+        onDraft: e => this.setState({ draft: e.target.value }),
+        onDraftKey: e => { if (e.key === 'Enter') this.addHw(level, cur); },
+        onAdd: () => this.addHw(level, cur),
+        waHref: 'https://wa.me/?text=' + encodeURIComponent(this.hwText(level, cur))
+      };
+    }
+
+    const studentRows = st.students.map(s => {
+      const lv = LEVEL_MAP[s.level] || 1;
+      const arr = CUR[lv] || [];
+      const done = Number(s.currentLesson) || 0;
+      const doneS = arr.find(x => x.n === done);
+      const nextS = arr.find(x => x.n === done + 1) || arr[0];
+      const digits = String(s.phone || '').replace(/\D/g, '').replace(/^0/, '972');
+      return {
+        name: s.name,
+        levelLabel: LV_NAME[lv], bg: LV_BG[lv], color: LV[lv],
+        doneLabel: doneS ? 'עצרנו במפגש ' + doneS.n + ' — ' + doneS.title : 'עוד לא נרשם מפגש שהושלם',
+        nextLabel: nextS ? 'המשך: מפגש ' + nextS.n + ' — ' + nextS.title : 'סיימה את הרמה — לעבור לרמה הבאה',
+        onOpen: () => nextS && this.openLesson(lv, nextS.n),
+        noPhone: !digits,
+        waLabel: digits ? 'שיעורי בית' : 'אין טלפון',
+        waHref: digits && nextS ? 'https://wa.me/' + digits + '?text=' + encodeURIComponent(this.hwText(lv, nextS)) : ''
+      };
+    });
+
+    return {
+      tabs, levelPills, sessions, lesson, studentRows,
+      fieldProps: { style: { boxSizing: 'border-box' } },
+      pillProps: { style: { whiteSpace: 'nowrap', flex: 'none' } },
+      isMap: tab === 'map', isLesson: tab === 'lesson', isStudents: tab === 'students',
+      levelName: LV_NAME[level],
+      levelMeta: list.length + ' מפגשים · ' + total + ' דקות כל אחד',
+      totalSessions: [1, 2, 3, 4].reduce((a, n) => a + (CUR[n] || []).length, 0),
+      minutesLabel: total,
+      hasStudents: studentRows.length > 0,
+      noStudents: studentRows.length === 0,
+      backToMap: () => this.go('map')
+    };
+  }
+}
+</script>
+</body>
+</html>

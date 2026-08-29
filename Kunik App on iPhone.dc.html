@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/tokens/colors.css">
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/tokens/typography.css">
+<link rel="stylesheet" href="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/styles.css">
+<script src="_ds/kunik-design-system-63ae7203-9a0b-448d-a451-cdb415ca0a35/_ds_bundle.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; direction: rtl; background: #F4F7FB; color: #121213; font-family: Rubik, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #006EE5; }
+  a:hover { color: #0055B2; }
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;gap:22px;padding:36px clamp(14px,4vw,24px) 48px">
+
+  <div style="display:flex;flex-direction:column;gap:7px;align-items:center;text-align:center;max-width:560px">
+    <div style="font-size:26px;font-weight:800">האפליקציה על אייפון</div>
+    <div style="font-size:15.5px;font-weight:500;color:#4A4D50;line-height:1.55;text-wrap:pretty">זה המסך האמיתי בגודל אייפון 16 (402 פיקסלים). אפשר לגלול ולהקליק בתוך המסגרת בדיוק כמו בטלפון.</div>
+  </div>
+
+  <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" width="{{ 402 }}" height="{{ 874 }}" hint-size="440px,920px">
+    <iframe src="Kunik App.dc.html" title="טק בגובה העיניים" style="width:100%;height:100%;border:0;display:block;background:#F4F7FB"></iframe>
+  </x-import>
+
+</div>
+
+</x-dc>
+</body>
+</html>
