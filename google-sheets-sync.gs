@@ -21,19 +21,51 @@ const TAB_NAMES = { students: 'תלמידות', payments: 'תשלומים', note
 // writeSheet always rewrites the whole sheet from scratch.
 const TEXT_COLS = ['phone', 'contactPhone', 'birthday', 'lastContact', 'date', 'newDate', 'time', 'newTime'];
 
+// The client fires several sheet reads/writes close together (e.g. adding a
+// student immediately followed by an extra lesson, or a 20-second background
+// poll landing mid-save) — without serializing them, one execution can hit
+// the spreadsheet mid-write from another, throw, and Apps Script still
+// answers the client with HTTP 200, so the failure is invisible and the row
+// just never appears. LockService.getScriptLock() plus a try/catch around
+// the actual work fixes both: writes are serialized, and any real failure
+// comes back as a visible {ok:false, error} instead of a silent no-op.
 function doGet(e) {
-  const out = {};
-  for (const name of Object.keys(SHEETS)) out[name] = readSheet(name);
-  return json(out);
+  const lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(15000);
+  } catch (lockErr) {
+    return json({ error: 'busy, try again' });
+  }
+  try {
+    const out = {};
+    for (const name of Object.keys(SHEETS)) out[name] = readSheet(name);
+    return json(out);
+  } catch (err) {
+    return json({ error: String(err) });
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 function doPost(e) {
   const body = JSON.parse(e.postData.contents);
   if (body.calendar) return handleCalendar(body);
-  const name = body.sheet;
-  if (!SHEETS[name]) return json({ ok: false, error: 'unknown sheet: ' + name });
-  writeSheet(name, Array.isArray(body.data) ? body.data : []);
-  return json({ ok: true });
+  const lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(15000);
+  } catch (lockErr) {
+    return json({ ok: false, error: 'busy, try again' });
+  }
+  try {
+    const name = body.sheet;
+    if (!SHEETS[name]) return json({ ok: false, error: 'unknown sheet: ' + name });
+    writeSheet(name, Array.isArray(body.data) ? body.data : []);
+    return json({ ok: true });
+  } catch (err) {
+    return json({ ok: false, error: String(err) });
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 // ---- Google Calendar sync ----
