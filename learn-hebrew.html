@@ -85,5 +85,11 @@
       <p class="note">Or call <span class="phone">+972 53-700-4934</span></p>
     </section>
   </main>
+  <script>
+    // Opens the WhatsApp chat straight away. Add ?stay to the address to look at this page instead.
+    if (location.search.indexOf('stay') === -1) {
+      location.replace('https://wa.me/972537004934?text=Hi%20Dana!%20I%27d%20like%20to%20learn%20Hebrew%20on%20Zoom.');
+    }
+  </script>
 </body>
 </html>
